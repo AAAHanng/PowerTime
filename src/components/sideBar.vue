@@ -7,6 +7,7 @@
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
+            :router="true"
         >
           <el-sub-menu index="1">
             <template #title>
@@ -19,10 +20,11 @@
 
           </el-sub-menu>
 
-          <el-menu-item index="2">
+          <el-menu-item index="/order">
             <el-icon> <icon-menu/></el-icon>
             <span>订单</span>
           </el-menu-item>
+
           <el-menu-item index="3">
             <el-icon> <icon-menu/></el-icon>
             <span>聊天</span>
@@ -56,10 +58,10 @@ import {
 
 
 const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
+
 }
 const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
+
 }
 </script>
 
