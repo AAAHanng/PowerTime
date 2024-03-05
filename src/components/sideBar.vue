@@ -25,7 +25,7 @@
             <span>订单</span>
           </el-menu-item>
 
-          <el-menu-item index="3">
+          <el-menu-item index="/chat">
             <el-icon> <icon-menu/></el-icon>
             <span>聊天</span>
           </el-menu-item>
