@@ -11,7 +11,7 @@ export const friendlyTime = (value) => {
     return  s+"分钟前";
   }else if((time<60*60*24)&&(time>=60*60)){
     //超过1小时少于24小时
-    s = Math.floor(time/60/60);
+    s = Math.floor(time/60/60);``
     return  s+"小时前";
   }else if((time<60*60*24*3)&&(time>=60*60*24)){
     //超过1天少于3天内

@@ -1,14 +1,14 @@
 <template>
   <div class="box">
 
-    <div class="app-user-form">
+    <div class="app-user-form"  >
       <input v-model="keyword" class="app-form-element" placeholder="" type="text">
-      <img src="@/assets/img/search.png" @click="">
+      <img src="@/assets/img/search.png" @click="search">
     </div>
 
-    <div v-for="(item, index) in items" :key="index" class="UserBox">
+    <div v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item)">
       <div class="avatar">
-        <img alt="" src="@/assets/img/user.png" style="width: 60px;">
+        <img :src="item.imgUrl" style="width: 60px;">
         <div> </div>
       </div>
       <div class="infor" style="flex: 1">
@@ -17,16 +17,35 @@
       </div>
       <div class="infnum" style="width: 20px;">{{ item.inforNum }}</div>
     </div>
+
   </div>
 </template>
 
 <script>
 export default {
+  data(){
+    return{
+      keyword:''
+    }
+  },
   props: {
     items: {
       type: Array,
       required: true
     },
+  },
+  methods: {
+    search() {
+      const keyword = this.keyword.trim();
+      if (keyword === '') {
+        console.log("请输入搜索关键字");
+        return;
+      }
+      this.$emit('search', keyword);
+    },
+    changeSession(item){
+      this.$emit('changSession',item)
+    }
   }
 };
 </script>
@@ -54,7 +73,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  cursor: pointer;
   img {
     width: 30px;
   }
@@ -75,6 +94,7 @@ export default {
 }
 
 .UserBox {
+  cursor: pointer;
   background-color: #dbd9d9;
   padding: 15px 20px;
   display: flex;

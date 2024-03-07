@@ -70,9 +70,11 @@ export default {
         }, 0)
       }
     },
+
     pickerEmoji(emoji) {
       this.text += emoji.title;
     },
+
     sendText(text) {
       text = text.replace(/^\s+|\s+$/g, '');
       if (text) {
@@ -82,6 +84,7 @@ export default {
         this.text = '';
       }, 0)
     },
+
     fileChange(e) {
       const reg = /\.(?:png|jpg|jepg)$/i;
       let file = e.target.files[0];

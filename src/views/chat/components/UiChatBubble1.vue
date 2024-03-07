@@ -1,44 +1,64 @@
 <template>
   <div :class="{
-        'chat-bubble-send': isSend,
-        'chat-bubble-receive': !isSend
+        'chat-bubble-send':isSend,
+        'chat-bubble-receive':!isSend
        }"
        class="chat-bubble-warp"
   >
-    <!-- 头像 -->
+
+    <!--    头像-->
     <div class="chat-bubble-avatar">
       <img alt="" src="@/assets/img/user.png">
     </div>
 
+    <!--    内容      -->
     <div class="chat-bubble-container">
 
+      <!--      内容 登录时间 名称等     -->
       <div v-if="setting.isName" class="chat-bubble-infoWarp">
-        <!-- 时间和名称 -->
-        <span v-if="setting.isTime" class="chat-bubble-time">{{ message.time | friendlyTime }}</span>
-        <span class="chat-bubble-name">{{ message.from.name }}</span>
-      </div>
 
+        <!--        时间       -->
+        <span v-if="setting.isTime&&isSend" slot="time"
+              class="chat-bubble-time">{{ message.time | friendlyTime }}</span>
+        <!--        名称       -->
+        <span class="chat-bubble-name">{{ message.from.name }}</span>
+        <span v-if="setting.isTime&&!isSend" slot="time"
+              class="chat-bubble-time">{{ message.time | friendlyTime }}</span>
+      </div>
+      <!--      内容 发送的消息     -->
       <div class="chat-bubble-content">
+
         <div slot="content">
-          {{ message.content }}
+          <UiEmojiText v-if="message.type==='text'" :text="message.content"
+          ></UiEmojiText>
+
+          <!--          图片-->
+          <div v-if="message.type==='image'">
+            <template v-if="message.content==='【图片】'">
+              {{ message.content }}
+            </template>
+            <img v-else :src="message.content" alt="图片">
+          </div>
+
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
-
 <script>
+import UiEmojiText from "./UiEmojiText";
 import {formatTime, friendlyTime} from "./filters";
 
 export default {
   name: "UiChatBubble",
+  components: {
+    UiEmojiText,
+  },
   filters: {
     friendlyTime,
     formatTime
   },
-
   props: {
     isSend: {
       type: Boolean,
@@ -52,7 +72,8 @@ export default {
           isTime: true
         }
       }
-    }, message: {
+    },
+    message: {
       type: Object,
       default() {
         return {
@@ -73,7 +94,6 @@ export default {
 <style scoped>
 .chat-bubble-warp {
   position: relative;
-  padding: 20px;
 }
 
 .chat-bubble-warp:after {
@@ -171,6 +191,15 @@ export default {
   background-color: #aae97e;
 }
 
+.chat-bubble-content /deep/ img {
+  max-width: 100%;
+}
 
+.chat-bubble-content /deep/ img.emoji-img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
 </style>
-

@@ -6,11 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "servers": "node server/app.js"
   },
   "dependencies": {
     "element-plus": "^2.4.4",
+    "express": "^4.18.3",
     "pinia": "^2.1.7",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },
