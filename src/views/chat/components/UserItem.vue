@@ -1,11 +1,21 @@
 <template>
   <div class="box">
+
+    <div class="app-user-form">
+      <input v-model="keyword" class="app-form-element" placeholder="" type="text">
+      <img src="@/assets/img/search.png" @click="">
+    </div>
+
     <div v-for="(item, index) in items" :key="index" class="UserBox">
-      <img alt="" src="@/assets/img/user.png">
-      <div class="infor">
+      <div class="avatar">
+        <img alt="" src="@/assets/img/user.png" style="width: 60px;">
+        <div> </div>
+      </div>
+      <div class="infor" style="flex: 1">
         <p>{{ item.username }}</p>
         <p>{{ item.sentence }}</p>
       </div>
+      <div class="infnum" style="width: 20px;">{{ item.inforNum }}</div>
     </div>
   </div>
 </template>
@@ -16,15 +26,51 @@ export default {
     items: {
       type: Array,
       required: true
-    }
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.box {
+.avatar {
+  position: relative;
+  div {
+    background-color: red;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+  }
+}
+
+.app-user-form {
+  background-color: #dbd9d9;
+  margin: 10px;
+  width: 270px;
+  height: 40px;
+  border-radius: 20px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 30px;
+  }
+
+  input {
+    border: none;
+    width: 80%;
+    height: 90%;
+    background-color: #dbd9d9;
+    letter-spacing: 1px;
+    outline: none;
+  }
+}
+
+.box {
+  width: 300px;
   background-color: #e8e6e6;
 }
 
@@ -33,6 +79,8 @@ export default {
   padding: 15px 20px;
   display: flex;
   align-items: center;
+  width: 260px;
+  height: 50px;
 
   img {
     display: block;
@@ -59,5 +107,16 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.infnum {
+  background-color: #d02323;
+  border-radius: 50%;
+  font-size: 10px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: white;
 }
 </style>

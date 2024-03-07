@@ -9,6 +9,7 @@ export default defineConfig({
         vue(),
     ],
     server: {
+        port:800,
         open: true,
         host: '0.0.0.0'
     },
