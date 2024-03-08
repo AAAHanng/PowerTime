@@ -1,7 +1,7 @@
 <template>
   <div class="box">
 
-    <div class="app-user-form"  >
+    <div class="app-user-form">
       <input v-model="keyword" class="app-form-element" placeholder="" type="text">
       <img src="@/assets/img/search.png" @click="search">
     </div>
@@ -9,7 +9,7 @@
     <div v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item)">
       <div class="avatar">
         <img :src="item.imgUrl" style="width: 60px;">
-        <div> </div>
+        <div></div>
       </div>
       <div class="infor" style="flex: 1">
         <p>{{ item.username }}</p>
@@ -22,16 +22,26 @@
 </template>
 
 <script>
+
 export default {
-  data(){
-    return{
-      keyword:''
+  data() {
+    return {
+      keyword: ''
     }
   },
   props: {
     items: {
       type: Array,
-      required: true
+      default() {
+        return {
+          items: {
+            username: '客户A',
+            sentence: '好勒',
+            inforNum: 32,
+            imgUrl: imga
+          }
+        }
+      }
     },
   },
   methods: {
@@ -43,8 +53,8 @@ export default {
       }
       this.$emit('search', keyword);
     },
-    changeSession(item){
-      this.$emit('changSession',item)
+    changeSession(item) {
+      this.$emit('changSession', item)
     }
   }
 };
@@ -53,6 +63,7 @@ export default {
 <style lang="scss" scoped>
 .avatar {
   position: relative;
+
   div {
     background-color: red;
     width: 15px;
@@ -74,6 +85,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
   img {
     width: 30px;
   }

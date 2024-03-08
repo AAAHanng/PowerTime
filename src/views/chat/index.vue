@@ -6,81 +6,151 @@
               @search="handleSearch"
     >
     </UserItem>
-    <ChatCard>
+    <ChatCard
+        @sendMessage="sendMessage">
       <template v-slot:body class="message-list-warp scroll">
         <UiChatBubble
             v-for="(item, index) in informationArray"
-            :message="item.message"
+            :message="item"
         ></UiChatBubble>
       </template>
     </ChatCard>
   </div>
+
+  <!--  备选方案   -->
+  <el-dialog v-model="dialogFormVisible" title="Shipping address" width="500">
+    <el-form :model="form">
+      <el-form-item label="用户名">
+        <el-input v-model="form.name" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="login">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
 </template>
 
-<script>
+<script setup>
+import {onBeforeUnmount, ref} from 'vue';
+import io from 'socket.io-client';
 import UserItem from "@/views/chat/components/UserItem.vue";
 import ChatCard from "@/views/chat/components/ChatCard.vue";
 import UiChatBubble from "@/views/chat/components/UiChatBubble.vue";
+import router from "@/router/index.js";
 import imga from "@/assets/img/user.png"
-import io from 'socket.io-client';
 
-export default {
-  components: {
-    UserItem,
-    ChatCard,
-    UiChatBubble
-  },
-  data() {
-    return {
-      userId: '123',
-      informationArray: [{
-        isSend: true,
-        from: {
-          name: "似水流年",
-          avatarUrl: "http://himg.bdimg.com/sys/portrait/item/90193135323338383137313237bc13.jpg"
-        },
-        content: "这是一条[微笑]测试信息1112222222[气球]2222222",
-        time: new Date().getTime(),
-        type: "text"
-      }],
+// 备选方案
+// const form = ref({name: ''});
+// const dialogFormVisible = ref(false);
+const informationArray = ref([]);
 
-      parentItems: [
-        {
-          username: '客户A',
-          sentence: '好勒',
-          image: '',
-          inforNum: 32,
-          imgUrl: imga
-        },
-        {
-          username: '客户B',
-          sentence: 'Vue.js is awesome!',
-          image: 'path/to/image2.jpg',
-          inforNum: 32,
-          imgUrl: imga
-        },
-      ]
-    };
-  },
-  mounted() {
-    this.socket = io('http://localhost:4000');
-    this.socket.on('message', (message) => {
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    // 在离开当前路由时断开Socket.IO连接
-    this.socket.disconnect();
-    next();
-  },
-  methods: {
-    handleSearch(keyword) {
-    },
-    changeSession(item) {
-      this.socket.emit("message",item)
-    },
+//发送用户
+const toUser = ref("")
 
+// 当前用户
+const LocalUser = router.currentRoute.value.query.username
+
+// 用户列表
+const parentItems = ref([]);
+
+const socket = io('http://localhost:4000', {
+  query: {
+    username: LocalUser
   }
+});
+
+const changeSession = (item) => {
+  toUser.value = item.socketId
 };
+
+const sendMessage = (text) => {
+
+  informationArray.value.push({
+    isSend: true,
+    from: {
+      name: LocalUser,
+      avatarUrl: imga
+    },
+    content: text,
+    time: new Date().getTime(),
+    type: "text"
+  })
+  console.log(informationArray.value)
+  if (!text.length) return;
+  socket.emit("send", {
+    formUser: LocalUser,
+    targetId: toUser.value,
+    msg: text
+  })
+}
+
+
+socket.on('receive', (data) => {
+  informationArray.value.push({
+    isSend: false,
+    from: {
+      name: LocalUser,
+      avatarUrl: imga
+    },
+    content: data.msg,
+    time: data.dataTime,
+    type: "text"
+  })
+  console.log(informationArray.value)
+})
+
+socket.on('online', (data) => {
+  parentItems.value = data
+      .filter(item => item.username !== LocalUser)
+      .map(item => ({
+        username: item.username,
+        sentence: 'This is demo',
+        inforNum: 1,
+        imgUrl: imga,
+        socketId: item.Id
+      }));
+});
+
+socket.on('error', (err) => {
+  console.log(err)
+})
+
+const disconnectSocket = () => {
+  socket.disconnect();
+}
+
+// 在组件销毁前执行
+onBeforeUnmount(disconnectSocket);
+
+// 备选方案
+// const login = () => {
+//   socket.emit("login", form.value);
+//   dialogFormVisible.value = false;
+// };
+
+// 测试登录写法
+// socket.on('loginError', data => {
+//   ElMessage.error('失败')
+// })
+// socket.on('loginSuccess', data => {
+//   ElMessage.success('成功')
+// })
+// socket.on("userList", data => {
+//   data.forEach(value => {
+//     parentItems.value.push({
+//       username: value.toString(),
+//       sentence: '',
+//       inforNum: 0,
+//       imgUrl: imga
+//     });
+//   });
+//   console.log(parentItems);
+// })
 </script>
 
 <style scoped>
@@ -92,5 +162,29 @@ export default {
 
 .UserItem {
   width: 300px;
+}
+.message-list-warp{
+
+}
+/*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
+.scroll::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.13);
+}
+/*定义滚动条的轨道，内阴影及圆角*/
+.scroll::-webkit-scrollbar-track{
+  -webkit-box-shadow: inset 0 0 6px rgba(240, 240, 240, 0);
+  border-radius: 10px;
+  background-color: rgba(0, 89, 255, 0);
+}
+/*定义滑块，内阴影及圆角*/
+.scroll::-webkit-scrollbar-thumb{
+  /*width: 10px;*/
+  height: 20px;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(236, 236, 236, 0.3);
+  background-color: rgba(203, 203, 203, 0.54);
+  transition: all 0.5s;
 }
 </style>

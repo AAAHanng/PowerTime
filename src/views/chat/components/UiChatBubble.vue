@@ -1,7 +1,7 @@
 <template>
   <div :class="{
-        'chat-bubble-send': isSend,
-        'chat-bubble-receive': !isSend
+        'chat-bubble-send': message.isSend,
+        'chat-bubble-receive': !message.isSend
        }"
        class="chat-bubble-warp"
   >
@@ -14,7 +14,7 @@
 
       <div v-if="setting.isName" class="chat-bubble-infoWarp">
         <!-- 时间和名称 -->
-        <span v-if="setting.isTime" class="chat-bubble-time">{{ message.time | friendlyTime }}</span>
+        <span v-if="setting.isTime" class="chat-bubble-time">{{ TimeChang(message.time) }}</span>
         <span class="chat-bubble-name">{{ message.from.name }}</span>
       </div>
 
@@ -30,13 +30,35 @@
 
 
 <script>
-import {formatTime, friendlyTime} from "./filters";
 
 export default {
   name: "UiChatBubble",
-  filters: {
-    friendlyTime,
-    formatTime
+  methods: {
+    TimeChang(value) {
+      let time = new Date().getTime();
+      time = parseInt((time - value) / 1000);
+      //存储转换值
+      let s;
+      if (time < 60 * 3) {//三分钟内
+        return '刚刚';
+      } else if ((time < 60 * 60) && (time >= 60 * 3)) {
+        //超过十分钟少于1小时
+        s = Math.floor(time / 60);
+        return s + "分钟前";
+      } else if ((time < 60 * 60 * 24) && (time >= 60 * 60)) {
+        //超过1小时少于24小时
+        s = Math.floor(time / 60 / 60);
+        return s + "小时前";
+      } else if ((time < 60 * 60 * 24 * 3) && (time >= 60 * 60 * 24)) {
+        //超过1天少于3天内
+        s = Math.floor(time / 60 / 60 / 24);
+        return s + "天前";
+      } else {
+        //超过3天
+        let date = new Date(value);
+        return date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate();
+      }
+    }
   },
 
   props: {
@@ -54,17 +76,6 @@ export default {
       }
     }, message: {
       type: Object,
-      default() {
-        return {
-          from: {
-            name: "似水流年",
-            avatarUrl: "http://himg.bdimg.com/sys/portrait/item/90193135323338383137313237bc13.jpg"
-          },
-          content: "这是一条[微笑]测试信息1112222222[气球]2222222",
-          time: new Date().getTime(),
-          type: "text"
-        };
-      }
     }
   }
 }
