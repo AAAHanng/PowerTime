@@ -28,7 +28,7 @@ io.on('connection', socket => {
         })
         console.log(`添加用户 ${username}`);
     }
-
+    console.log(userList)
     io.emit("online", userList)
 
     socket.on('send', ({formUser, targetId, msg}) => {

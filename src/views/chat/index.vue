@@ -1,14 +1,14 @@
 <template>
   <div class="main">
     <UserItem :items="parentItems"
-              class="UserItem"
+              class="UserItem message-list-warp scroll"
               @changSession="changeSession"
               @search="handleSearch"
     >
     </UserItem>
     <ChatCard
         @sendMessage="sendMessage">
-      <template v-slot:body class="message-list-warp scroll">
+      <template v-slot:body>
         <UiChatBubble
             v-for="(item) in informationArray"
             :message="item"
@@ -189,29 +189,24 @@ onMounted(() => {
 }
 
 .UserItem {
-  width: 300px;
-}
-
-.message-list-warp {
-
+  width: 400px;
+  height: 90vh;
 }
 
 /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
-.scroll::-webkit-scrollbar {
+.scroll::-webkit-scrollbar{
   width: 5px;
   height: 5px;
   background-color: rgba(255, 255, 255, 0.13);
 }
-
 /*定义滚动条的轨道，内阴影及圆角*/
-.scroll::-webkit-scrollbar-track {
+.scroll::-webkit-scrollbar-track{
   -webkit-box-shadow: inset 0 0 6px rgba(240, 240, 240, 0);
   border-radius: 10px;
   background-color: rgba(0, 89, 255, 0);
 }
-
 /*定义滑块，内阴影及圆角*/
-.scroll::-webkit-scrollbar-thumb {
+.scroll::-webkit-scrollbar-thumb{
   /*width: 10px;*/
   height: 20px;
   border-radius: 10px;
@@ -219,4 +214,10 @@ onMounted(() => {
   background-color: rgba(203, 203, 203, 0.54);
   transition: all 0.5s;
 }
+.message-list-warp{
+  box-sizing: border-box;
+  padding: 10px;
+  overflow-y: auto;
+}
+
 </style>
