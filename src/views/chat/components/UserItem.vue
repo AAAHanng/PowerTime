@@ -1,14 +1,12 @@
 <template>
   <div class="box">
-
     <div class="app-user-form">
-      <input v-model="keyword" class="app-form-element" placeholder="" type="text">
+      <input v-model="keyword"  placeholder="" type="text">
       <img src="@/assets/img/search.png" @click="search" alt="">
     </div>
-
     <div ref="UserList" v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item,index)">
       <div class="avatar">
-        <img :src="item.imgUrl" style="width: 60px;" alt="">
+        <img :src="item.imgUrl"  alt="">
         <div :style="{ backgroundColor: item.isLoading ? 'red' : '#85eb53' }"></div>
       </div>
       <div class="infor" style="flex: 1">
@@ -17,7 +15,6 @@
       </div>
       <div class="infnum" style="width: 20px;">{{ item.inforNum }}</div>
     </div>
-
   </div>
 </template>
 
@@ -88,7 +85,7 @@ export default {
 .app-user-form {
   background-color: #dbd9d9;
   margin: 10px;
-  width: 270px;
+  width: 280px;
   height: 40px;
   border-radius: 20px;
   display: flex;
@@ -111,17 +108,16 @@ export default {
 }
 
 .box {
-  width: 300px;
   background-color: #e8e6e6;
 }
 
 .UserBox {
   cursor: pointer;
   background-color: #e8e6e6;
-  padding: 15px 20px;
+  padding: 15px 15px;
   display: flex;
   align-items: center;
-  width: 260px;
+  width: 270px;
   height: 50px;
 
   img {

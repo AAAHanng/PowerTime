@@ -1,13 +1,12 @@
 <template>
-  <div class="session-panel-warp">
-
+  <div v-if="isJoin" class="session-panel-warp">
     <div class="session-panel-body message-list-warp scroll">
       <slot name="body"></slot>
     </div>
 
     <div class="session-panel-footer" @mousedown.stop="">
 
-      <!--      工具操作部分 -->
+      <!-- 工具操作部分 -->
       <div class="session-tool-warp">
         <div class="session-tool-item" @click="toggleShow">
           <img alt="" src="@/assets/img/a-Group1.png">
@@ -18,17 +17,20 @@
         </label>
       </div>
 
-      <!--      输入区域-->
+      <!-- 输入区域-->
       <div class="session-text-warp">
         <textarea v-model="text" class="session-textarea" @keypress.enter="sendText(text)"></textarea>
       </div>
 
-      <!--      按钮区域-->
+      <!-- 按钮区域-->
       <div class="session-btn-warp">
         <button class="session-send-btn" @click="sendText(text)">发送</button>
       </div>
     </div>
 
+  </div>
+  <div v-else class="container">
+    <img alt="" class="logo" src="@/assets/img/logo.png">
   </div>
 </template>
 
@@ -44,6 +46,9 @@ export default {
           avatarUrl: "http://himg.bdimg.com/sys/portrait/item/90193135323338383137313237bc13.jpg"
         }
       }
+    },
+    isJoin: {
+      type: Boolean
     }
   },
   data() {
@@ -112,21 +117,35 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container {
+  width: calc(100vw - 500px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(90vh - 200px);
+}
+
+.centered-image {
+  max-height: 100%;
+  max-width: 100%;
+}
 
 /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
-.scroll::-webkit-scrollbar{
+.scroll::-webkit-scrollbar {
   width: 5px;
   height: 5px;
   background-color: rgba(255, 255, 255, 0.13);
 }
+
 /*定义滚动条的轨道，内阴影及圆角*/
-.scroll::-webkit-scrollbar-track{
+.scroll::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(240, 240, 240, 0);
   border-radius: 10px;
   background-color: rgba(0, 89, 255, 0);
 }
+
 /*定义滑块，内阴影及圆角*/
-.scroll::-webkit-scrollbar-thumb{
+.scroll::-webkit-scrollbar-thumb {
   /*width: 10px;*/
   height: 20px;
   border-radius: 10px;
@@ -134,14 +153,15 @@ export default {
   background-color: rgba(203, 203, 203, 0.54);
   transition: all 0.5s;
 }
-.message-list-warp{
+
+.message-list-warp {
   box-sizing: border-box;
   padding: 10px;
   overflow-y: auto;
 }
 
 .session-panel-warp {
-  width: 100%;
+  width: calc(100vw - 500px);
   height: 90vh;
   margin: 0 auto;
   background-color: #f2f2f2;

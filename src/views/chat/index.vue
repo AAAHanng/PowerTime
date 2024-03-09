@@ -1,16 +1,17 @@
 <template>
   <div class="main">
     <UserItem :items="parentItems"
-              class="UserItem message-list-warp scroll"
+              class=" message-list-warp scroll"
               @changSession="changeSession"
               @search="handleSearch"
     >
     </UserItem>
     <ChatCard
+        :isJoin="isToUserNotEmpty()"
         @sendMessage="sendMessage">
       <template v-slot:body>
         <UiChatBubble
-            v-for="(item) in informationArray"
+            v-for="(item) in getMessage()"
             :message="item"
         ></UiChatBubble>
       </template>
@@ -46,13 +47,16 @@ import UiChatBubble from "@/views/chat/components/UiChatBubble.vue";
 import router from "@/router/index.js";
 import imga from "@/assets/img/user.png"
 
-// 备选方案
-// const form = ref({name: ''});
-// const dialogFormVisible = ref(false);
+
 const informationArray = ref([]);
+const chonseUser = ref()
+
+const getMessage = () => {
+  return informationArray.value.filter(item => item.formUser === chonseUser.value)
+}
 
 //发送用户
-const toUser = ref("")
+const toUser = ref()
 
 // 当前用户
 const LocalUser = router.currentRoute.value.query.username
@@ -60,17 +64,21 @@ const LocalUser = router.currentRoute.value.query.username
 // 用户列表
 const parentItems = ref([]);
 
+// 是否选择了用户
+const isToUserNotEmpty = () => {
+  return !!toUser.value; // 如果 toUser 不为空，返回 true，否则返回 false
+
+}
 
 // 搜索用户列表
 const handleSearch = (keyword) => {
-  if(!keyword){
+  if (!keyword) {
     getUser()
   }
   parentItems.value = parentItems.value.filter(item => {
     return item.username.toLowerCase().includes(keyword.toLowerCase());
   })
 }
-
 
 // 发送用户信息
 const socket = io('http://localhost:4000', {
@@ -82,6 +90,8 @@ const socket = io('http://localhost:4000', {
 // 改变发送用户
 const changeSession = (item) => {
   toUser.value = item.socketId
+  chonseUser.value = item.username
+  console.log(chonseUser.value)
 };
 
 // 发送消息
@@ -96,7 +106,6 @@ const sendMessage = (text) => {
     time: new Date().getTime(),
     type: "text"
   })
-  console.log(informationArray.value)
   if (!text.length) return;
   socket.emit("send", {
     formUser: LocalUser,
@@ -115,16 +124,16 @@ const getUser = () => {
           sentence: 'This is demo',
           inforNum: 1,
           imgUrl: imga,
-          isLoding:true,
+          isLoding: true,
           socketId: item.Id
         }));
   });
-  console.log(1)
 }
 
 // 接受用户消息
 socket.on('receive', (data) => {
   informationArray.value.push({
+    formUser: data.formUser,
     isSend: false,
     from: {
       name: LocalUser,
@@ -135,6 +144,7 @@ socket.on('receive', (data) => {
     type: "text"
   })
   console.log(informationArray.value)
+  console.log(parentItems.value)
 })
 
 // 错误连接
@@ -154,6 +164,11 @@ onBeforeUnmount(disconnectSocket);
 onMounted(() => {
   getUser();
 });
+
+
+// 备选方案
+// const form = ref({name: ''});
+// const dialogFormVisible = ref(false);
 
 // 备选方案
 // const login = () => {
@@ -188,35 +203,31 @@ onMounted(() => {
   display: flex;
 }
 
-.UserItem {
-  width: 400px;
-  height: 90vh;
-}
-
 /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
-.scroll::-webkit-scrollbar{
+.scroll::-webkit-scrollbar {
   width: 5px;
   height: 5px;
   background-color: rgba(255, 255, 255, 0.13);
 }
+
 /*定义滚动条的轨道，内阴影及圆角*/
-.scroll::-webkit-scrollbar-track{
+.scroll::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(240, 240, 240, 0);
   border-radius: 10px;
   background-color: rgba(0, 89, 255, 0);
 }
+
 /*定义滑块，内阴影及圆角*/
-.scroll::-webkit-scrollbar-thumb{
-  /*width: 10px;*/
+.scroll::-webkit-scrollbar-thumb {
   height: 20px;
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(236, 236, 236, 0.3);
   background-color: rgba(203, 203, 203, 0.54);
   transition: all 0.5s;
 }
-.message-list-warp{
+
+.message-list-warp {
   box-sizing: border-box;
-  padding: 10px;
   overflow-y: auto;
 }
 
