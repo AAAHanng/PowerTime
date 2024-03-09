@@ -10,7 +10,7 @@
         @sendMessage="sendMessage">
       <template v-slot:body class="message-list-warp scroll">
         <UiChatBubble
-            v-for="(item, index) in informationArray"
+            v-for="(item) in informationArray"
             :message="item"
         ></UiChatBubble>
       </template>
@@ -18,25 +18,27 @@
   </div>
 
   <!--  备选方案   -->
-  <el-dialog v-model="dialogFormVisible" title="Shipping address" width="500">
-    <el-form :model="form">
-      <el-form-item label="用户名">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="login">
-          确认
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+  <!--
+    <el-dialog v-model="dialogFormVisible" title="Shipping address" width="500">
+      <el-form :model="form">
+        <el-form-item label="用户名">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="login">
+            确认
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+  -->
 
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import io from 'socket.io-client';
 import UserItem from "@/views/chat/components/UserItem.vue";
 import ChatCard from "@/views/chat/components/ChatCard.vue";
@@ -58,18 +60,32 @@ const LocalUser = router.currentRoute.value.query.username
 // 用户列表
 const parentItems = ref([]);
 
+
+// 搜索用户列表
+const handleSearch = (keyword) => {
+  if(!keyword){
+    getUser()
+  }
+  parentItems.value = parentItems.value.filter(item => {
+    return item.username.toLowerCase().includes(keyword.toLowerCase());
+  })
+}
+
+
+// 发送用户信息
 const socket = io('http://localhost:4000', {
   query: {
     username: LocalUser
   }
 });
 
+// 改变发送用户
 const changeSession = (item) => {
   toUser.value = item.socketId
 };
 
+// 发送消息
 const sendMessage = (text) => {
-
   informationArray.value.push({
     isSend: true,
     from: {
@@ -89,7 +105,24 @@ const sendMessage = (text) => {
   })
 }
 
+//  得到用户消息
+const getUser = () => {
+  socket.on('online', (data) => {
+    parentItems.value = data
+        .filter(item => item.username !== LocalUser)
+        .map(item => ({
+          username: item.username,
+          sentence: 'This is demo',
+          inforNum: 1,
+          imgUrl: imga,
+          isLoding:true,
+          socketId: item.Id
+        }));
+  });
+  console.log(1)
+}
 
+// 接受用户消息
 socket.on('receive', (data) => {
   informationArray.value.push({
     isSend: false,
@@ -104,28 +137,23 @@ socket.on('receive', (data) => {
   console.log(informationArray.value)
 })
 
-socket.on('online', (data) => {
-  parentItems.value = data
-      .filter(item => item.username !== LocalUser)
-      .map(item => ({
-        username: item.username,
-        sentence: 'This is demo',
-        inforNum: 1,
-        imgUrl: imga,
-        socketId: item.Id
-      }));
-});
-
+// 错误连接
 socket.on('error', (err) => {
   console.log(err)
 })
 
+// 断开连接
 const disconnectSocket = () => {
   socket.disconnect();
 }
 
 // 在组件销毁前执行
 onBeforeUnmount(disconnectSocket);
+
+// 在组件挂载时执行搜索操作
+onMounted(() => {
+  getUser();
+});
 
 // 备选方案
 // const login = () => {
@@ -163,23 +191,27 @@ onBeforeUnmount(disconnectSocket);
 .UserItem {
   width: 300px;
 }
-.message-list-warp{
+
+.message-list-warp {
 
 }
+
 /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
-.scroll::-webkit-scrollbar{
+.scroll::-webkit-scrollbar {
   width: 5px;
   height: 5px;
   background-color: rgba(255, 255, 255, 0.13);
 }
+
 /*定义滚动条的轨道，内阴影及圆角*/
-.scroll::-webkit-scrollbar-track{
+.scroll::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(240, 240, 240, 0);
   border-radius: 10px;
   background-color: rgba(0, 89, 255, 0);
 }
+
 /*定义滑块，内阴影及圆角*/
-.scroll::-webkit-scrollbar-thumb{
+.scroll::-webkit-scrollbar-thumb {
   /*width: 10px;*/
   height: 20px;
   border-radius: 10px;

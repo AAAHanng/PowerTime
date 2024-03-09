@@ -3,13 +3,13 @@
 
     <div class="app-user-form">
       <input v-model="keyword" class="app-form-element" placeholder="" type="text">
-      <img src="@/assets/img/search.png" @click="search">
+      <img src="@/assets/img/search.png" @click="search" alt="">
     </div>
 
-    <div v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item)">
+    <div ref="UserList" v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item,index)">
       <div class="avatar">
-        <img :src="item.imgUrl" style="width: 60px;">
-        <div></div>
+        <img :src="item.imgUrl" style="width: 60px;" alt="">
+        <div :style="{ backgroundColor: item.isLoading ? 'red' : '#85eb53' }"></div>
       </div>
       <div class="infor" style="flex: 1">
         <p>{{ item.username }}</p>
@@ -47,13 +47,16 @@ export default {
   methods: {
     search() {
       const keyword = this.keyword.trim();
-      if (keyword === '') {
-        console.log("请输入搜索关键字");
-        return;
-      }
       this.$emit('search', keyword);
     },
-    changeSession(item) {
+    changeSession(item,itemIndex) {
+      const elements = this.$refs.UserList;
+      elements.forEach((element, index) => {
+        element.classList.remove('activeUser');
+        if (index === itemIndex) {
+          element.classList.add('activeUser');
+        }
+      });
       this.$emit('changSession', item)
     }
   }
@@ -61,8 +64,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.activeUser{
+  background-color:#dbd9d9 !important;
+}
 .avatar {
   position: relative;
+  img{
+    border-radius: 50%;
+    display: block;
+  }
 
   div {
     background-color: red;
@@ -107,7 +117,7 @@ export default {
 
 .UserBox {
   cursor: pointer;
-  background-color: #dbd9d9;
+  background-color: #e8e6e6;
   padding: 15px 20px;
   display: flex;
   align-items: center;
