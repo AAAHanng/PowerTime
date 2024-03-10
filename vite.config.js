@@ -9,9 +9,16 @@ export default defineConfig({
         vue(),
     ],
     server: {
-        port:800,
+        port: 800,
         open: true,
-        host: '0.0.0.0'
+        host: '0.0.0.0',
+        proxy: {
+            '/api': {
+                target: import.meta.env.VITE_BACKEND_URL,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '')
+            },
+        }
     },
     resolve: {
         alias: {
