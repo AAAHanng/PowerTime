@@ -19,10 +19,19 @@
       </div>
 
       <div class="chat-bubble-content">
-        <div slot="content">
+        <div v-if="message.type==='text'">
           {{ message.msg }}
         </div>
+
+        <div v-if="message.type==='image'">
+          <template v-if="message.content==='【图片】'">
+            {{message.msg}}
+          </template>
+          <img :src="message.msg" alt="图片" v-else>
+        </div>
+
       </div>
+
     </div>
   </div>
 
@@ -153,7 +162,7 @@ export default {
   min-height: 20px;
   padding: 10px;
   border-radius: 4px;
-  max-width: 100%;
+  max-width: 40%;
   line-height: 20px;
   vertical-align: middle;
   color: #666666;
@@ -191,7 +200,9 @@ export default {
 .chat-bubble-send .chat-bubble-content {
   background-color: #aae97e;
 }
-
+.chat-bubble-content img{
+  max-width: 100%;
+}
 
 </style>
 

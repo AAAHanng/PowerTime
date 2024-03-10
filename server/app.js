@@ -30,14 +30,15 @@ io.on('connection', socket => {
 
     io.emit("online", userList)
 
-    socket.on('send', ({fromUserName, targetId, msg}) => {
+    socket.on('send', ({fromUserName, targetId, msg,type}) => {
         const targetSocket = io.sockets.sockets.get(targetId);
         const toUser = userList.find(user => user.Id === targetId);
         targetSocket.emit('receive', {
             fromUserName,
             toUserName: toUser.username,
             msg,
-            dataTime: new Date().getTime()
+            dataTime: new Date().getTime(),
+            type
         })
     })
 

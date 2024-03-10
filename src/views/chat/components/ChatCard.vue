@@ -1,6 +1,6 @@
 <template>
   <div v-if="isJoin" class="session-panel-warp">
-    <div class="session-panel-body message-list-warp scroll">
+    <div ref="messageContainer" class="session-panel-body message-list-warp scroll">
       <slot name="body"></slot>
     </div>
 
@@ -11,18 +11,20 @@
 
         <div class="session-tool-item" @click="emojiShow = !emojiShow">
           <img alt="" src="@/assets/img/a-Group1.png">
-          <div class="emoji scroll" tabindex="1" v-show="emojiShow" >
+          <div v-show="emojiShow" class="emoji scroll" tabindex="1">
             <span
                 v-for="item in emojiList"
                 :key="item.codes"
                 @click="handleEmoji(item)"
-            >{{item.utf8String}}</span>
+            >{{ item.utf8String }}</span>
           </div>
         </div>
+
         <label class="session-tool-item">
-          <img alt="" src="@/assets/img/wenjianjia.png">
-          <input accept="image/png, image/jpg, image/jpeg" type="file" @change="fileChange">
+          <img alt="" src="@/assets/img/photo.png">
+          <input accept="image/png, image/jpg, image/jpeg" type="file" @change="photoChange">
         </label>
+
       </div>
 
       <!-- 输入区域-->
@@ -44,6 +46,7 @@
 
 <script>
 import emoji from "@/assets/emoji.json";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "UiSessionPanel",
@@ -69,10 +72,17 @@ export default {
       emojiShow: false,
     }
   },
+  mounted() {
+    this.emojiList = emoji
+    // 在组件加载后滚动到底部
+    this.$nextTick(() => {
+      this.scrollToBottom();
+    });
+  },
   methods: {
 
-    handleEmoji(item){
-      this.text+=item.utf8String
+    handleEmoji(item) {
+      this.text += item.utf8String
     },
 
     sendText(text) {
@@ -85,18 +95,19 @@ export default {
       }, 0)
     },
 
-    fileChange(e) {
+    photoChange(e) {
       const reg = /\.(?:png|jpg|jepg)$/i;
       let file = e.target.files[0];
       if (!reg.test(file.name)) {
-        Message.warning("请选择正确格式的图片文件!");
+        ElMessage.warning("请选择正确格式的图片文件!");
         return
       }
       let maxSize = 1024 * 1024;
       if (file.size > maxSize) {
-        Message.warning("图片大小不能超过1M!", "warning");
+        ElMessage.warning("图片大小不能超过1M!");
         return
       }
+
       let reader = new FileReader();
       reader.readAsDataURL(file); // 读出 base64
       reader.onloadend = () => {
@@ -105,12 +116,25 @@ export default {
       };
     },
     sendMessage(content, type) {
-      this.$emit("sendMessage", content, type, this.session)
-    }
+      this.$emit("sendMessage", content, type)
+      this.scrollToBottom();
+    },
+    scrollToBottom() {
+      const messageContainer = this.$refs.messageContainer;
+      if (messageContainer) {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    },
   },
-  mounted() {
-    this.emojiList = emoji
-  }
+  watch: {
+    isJoin(newValue) {
+      if (newValue) {
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+      }
+    },
+  },
 }
 </script>
 
@@ -126,11 +150,13 @@ export default {
   background-color: #fff;
   border: 1px solid #cccccc;
   outline: none;
+
   span {
     padding: 2px;
     cursor: pointer;
   }
 }
+
 .container {
   width: calc(100vw - 500px);
   display: flex;

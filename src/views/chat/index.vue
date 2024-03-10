@@ -86,18 +86,20 @@ const changeSession = (item) => {
 };
 
 // 发送消息
-const sendMessage = (text) => {
+const sendMessage = (text, type) => {
   if (!text.length) return;
   appendMessage({
     fromUserName: state.username,
     toUsername: state.targetUser.username,
     msg: text,
-    dataTime: new Date().getTime()
+    dataTime: new Date().getTime(),
+    type: type
   });
   socket.emit("send", {
     fromUserName: state.username,
     targetId: state.targetUser.socketId,
-    msg: text
+    msg: text,
+    type:type
   });
 };
 
@@ -120,6 +122,7 @@ const socket = io('http://localhost:4000', {
 // 接受用户消息
 socket.on('receive', (data) => {
   appendMessage(data)
+  console.log(state.messageBox[state.username])
 })
 
 // 错误连接
@@ -145,7 +148,6 @@ function appendMessage(data) {
   !state.messageBox[state.username] && (state.messageBox[state.username] = []);
   state.messageBox[state.username].push(data);
 }
-
 
 
 // 在组件销毁前执行
