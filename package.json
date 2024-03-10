@@ -16,7 +16,8 @@
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "vue": "^3.3.11",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-weixin-emojis": "^0.1.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

@@ -49,6 +49,7 @@ import UiChatBubble from "@/views/chat/components/UiChatBubble.vue";
 import router from "@/router/index.js";
 import imga from "@/assets/img/user.png"
 
+
 const state = reactive({
   username: router.currentRoute.value.query.username,
   userList: [],
@@ -144,6 +145,8 @@ function appendMessage(data) {
   !state.messageBox[state.username] && (state.messageBox[state.username] = []);
   state.messageBox[state.username].push(data);
 }
+
+
 
 // 在组件销毁前执行
 onBeforeUnmount(() => {

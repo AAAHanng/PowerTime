@@ -1,12 +1,12 @@
 <template>
   <div class="box">
     <div class="app-user-form">
-      <input v-model="keyword"  placeholder="" type="text" @keypress.enter="search">
-      <img src="@/assets/img/search.png" @click="search" alt="">
+      <input v-model="keyword" placeholder="" type="text" @keypress.enter="search">
+      <img alt="" src="@/assets/img/search.png" @click="search">
     </div>
-    <div ref="UserList" v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item,index)">
+    <div v-for="(item, index) in items" :key="index" ref="UserList" class="UserBox" @click="changeSession(item,index)">
       <div class="avatar">
-        <img :src="item.imgUrl"  alt="">
+        <img :src="item.imgUrl" alt="">
         <div :style="{ backgroundColor: item.isLoading ? 'red' : '#85eb53' }"></div>
       </div>
       <div class="infor" style="flex: 1">
@@ -25,6 +25,11 @@ export default {
   data() {
     return {
       keyword: ''
+    }
+  },
+  watch: {
+    keyword(a) {
+      this.search(a)
     }
   },
   props: {
@@ -47,7 +52,7 @@ export default {
       const keyword = this.keyword.trim();
       this.$emit('search', keyword);
     },
-    changeSession(item,itemIndex) {
+    changeSession(item, itemIndex) {
       const elements = this.$refs.UserList;
       elements.forEach((element, index) => {
         element.classList.remove('activeUser');
@@ -62,12 +67,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.activeUser{
-  background-color:#dbd9d9 !important;
+.activeUser {
+  background-color: #dbd9d9 !important;
 }
+
 .avatar {
   position: relative;
-  img{
+
+  img {
     border-radius: 50%;
     display: block;
   }

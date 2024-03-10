@@ -15,7 +15,7 @@
       <div v-if="setting.isName" class="chat-bubble-infoWarp">
         <!-- 时间和名称 -->
         <span v-if="setting.isTime" class="chat-bubble-time">{{ TimeChang(message.dataTime) }}</span>
-        <span class="chat-bubble-name">{{ message.fromUserName}}</span>
+        <span class="chat-bubble-name">{{ message.fromUserName }}</span>
       </div>
 
       <div class="chat-bubble-content">
@@ -30,6 +30,7 @@
 
 
 <script>
+import emoji from "@/assets/emoji.json"
 
 export default {
   name: "UiChatBubble",
@@ -78,8 +79,14 @@ export default {
       type: Object,
     }
   },
+  data() {
+    return {
+
+    }
+  },
   mounted() {
     // console.log('Message:', this.message); // 打印 message 属性的值
+    this.emojiList = emoji
   }
 }
 </script>

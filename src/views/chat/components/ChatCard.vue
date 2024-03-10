@@ -8,8 +8,16 @@
 
       <!-- 工具操作部分 -->
       <div class="session-tool-warp">
-        <div class="session-tool-item" @click="toggleShow">
+
+        <div class="session-tool-item" @click="emojiShow = !emojiShow">
           <img alt="" src="@/assets/img/a-Group1.png">
+          <div class="emoji scroll" tabindex="1" v-show="emojiShow" >
+            <span
+                v-for="item in emojiList"
+                :key="item.codes"
+                @click="handleEmoji(item)"
+            >{{item.utf8String}}</span>
+          </div>
         </div>
         <label class="session-tool-item">
           <img alt="" src="@/assets/img/wenjianjia.png">
@@ -35,6 +43,8 @@
 </template>
 
 <script>
+import emoji from "@/assets/emoji.json";
+
 export default {
   name: "UiSessionPanel",
   props: {
@@ -54,30 +64,15 @@ export default {
   data() {
     return {
       isShow: false,
-      text: ""
+      text: "",
+      emojiList: [],
+      emojiShow: false,
     }
   },
   methods: {
-    toggleShow() {
-      const vm = this;
 
-      function hide() {
-        vm.isShow = false;
-        document.removeEventListener('click', hide)
-      }
-
-      if (vm.isShow) {
-        hide()
-      } else {
-        vm.isShow = true;
-        setTimeout(() => {
-          document.addEventListener('click', hide)
-        }, 0)
-      }
-    },
-
-    pickerEmoji(emoji) {
-      this.text += emoji.title;
+    handleEmoji(item){
+      this.text+=item.utf8String
     },
 
     sendText(text) {
@@ -97,7 +92,7 @@ export default {
         Message.warning("请选择正确格式的图片文件!");
         return
       }
-      let maxSize = 1 * 1024 * 1024;
+      let maxSize = 1024 * 1024;
       if (file.size > maxSize) {
         Message.warning("图片大小不能超过1M!", "warning");
         return
@@ -112,11 +107,30 @@ export default {
     sendMessage(content, type) {
       this.$emit("sendMessage", content, type, this.session)
     }
+  },
+  mounted() {
+    this.emojiList = emoji
   }
 }
 </script>
 
 <style lang="less" scoped>
+.emoji {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  width: 276px;
+  height: 218px;
+  overflow: auto;
+  bottom: 40px;
+  background-color: #fff;
+  border: 1px solid #cccccc;
+  outline: none;
+  span {
+    padding: 2px;
+    cursor: pointer;
+  }
+}
 .container {
   width: calc(100vw - 500px);
   display: flex;
@@ -275,48 +289,4 @@ export default {
   font-weight: bolder;
 }
 
-.emoji-panel {
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  position: absolute;
-  bottom: 100%;
-  width: 420px;
-  box-shadow: 0 0 3px #d1dbe5;
-  margin-bottom: 5px;
-  left: -40px;
-}
-
-.emoji-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.emoji-list:after {
-  display: block;
-  clear: both;
-  content: '';
-}
-
-.emoji-item {
-  float: left;
-  width: 26px;
-  height: 26px;
-  padding: 2px;
-  box-sizing: content-box;
-  cursor: pointer;
-  border-radius: 2px;
-  user-select: none;
-}
-
-.emoji-item:hover {
-  background-color: #f2f2f2;
-}
-
-.emoji-item img {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 </style>
