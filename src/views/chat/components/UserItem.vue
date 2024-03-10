@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="app-user-form">
-      <input v-model="keyword"  placeholder="" type="text">
+      <input v-model="keyword"  placeholder="" type="text" @keypress.enter="search">
       <img src="@/assets/img/search.png" @click="search" alt="">
     </div>
     <div ref="UserList" v-for="(item, index) in items" :key="index" class="UserBox" @click="changeSession(item,index)">
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import imga from "@/assets/img/user.png"
 
 export default {
   data() {

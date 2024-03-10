@@ -1,7 +1,7 @@
 <template>
   <div :class="{
-        'chat-bubble-send': message.isSend,
-        'chat-bubble-receive': !message.isSend
+        'chat-bubble-send': isSend,
+        'chat-bubble-receive': !isSend
        }"
        class="chat-bubble-warp"
   >
@@ -14,13 +14,13 @@
 
       <div v-if="setting.isName" class="chat-bubble-infoWarp">
         <!-- 时间和名称 -->
-        <span v-if="setting.isTime" class="chat-bubble-time">{{ TimeChang(message.time) }}</span>
-        <span class="chat-bubble-name">{{ message.from.name }}</span>
+        <span v-if="setting.isTime" class="chat-bubble-time">{{ TimeChang(message.dataTime) }}</span>
+        <span class="chat-bubble-name">{{ message.fromUserName}}</span>
       </div>
 
       <div class="chat-bubble-content">
         <div slot="content">
-          {{ message.content }}
+          {{ message.msg }}
         </div>
       </div>
     </div>
@@ -77,6 +77,9 @@ export default {
     }, message: {
       type: Object,
     }
+  },
+  mounted() {
+    // console.log('Message:', this.message); // 打印 message 属性的值
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <UserItem :items="parentItems"
+    <UserItem :items="getUserList"
               class=" message-list-warp scroll"
               @changSession="changeSession"
               @search="handleSearch"
@@ -11,7 +11,9 @@
         @sendMessage="sendMessage">
       <template v-slot:body>
         <UiChatBubble
-            v-for="(item) in getMessage()"
+            v-for="(item,index) in messageList"
+            :key="index"
+            :isSend="state.username === item.fromUserName"
             :message="item"
         ></UiChatBubble>
       </template>
@@ -39,7 +41,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {computed, onBeforeUnmount, reactive} from 'vue';
 import io from 'socket.io-client';
 import UserItem from "@/views/chat/components/UserItem.vue";
 import ChatCard from "@/views/chat/components/ChatCard.vue";
@@ -47,104 +49,76 @@ import UiChatBubble from "@/views/chat/components/UiChatBubble.vue";
 import router from "@/router/index.js";
 import imga from "@/assets/img/user.png"
 
-
-const informationArray = ref([]);
-const chonseUser = ref()
-
-const getMessage = () => {
-  return informationArray.value.filter(item => item.formUser === chonseUser.value)
-}
-
-//发送用户
-const toUser = ref()
-
-// 当前用户
-const LocalUser = router.currentRoute.value.query.username
-
-// 用户列表
-const parentItems = ref([]);
+const state = reactive({
+  username: router.currentRoute.value.query.username,
+  userList: [],
+  targetUser: null,
+  messageBox: {},
+  keyword: null
+});
 
 // 是否选择了用户
 const isToUserNotEmpty = () => {
-  return !!toUser.value; // 如果 toUser 不为空，返回 true，否则返回 false
-
+  return !!state.targetUser;
 }
 
 // 搜索用户列表
 const handleSearch = (keyword) => {
-  if (!keyword) {
-    getUser()
-  }
-  parentItems.value = parentItems.value.filter(item => {
-    return item.username.toLowerCase().includes(keyword.toLowerCase());
-  })
+  state.keyword = keyword
 }
 
-// 发送用户信息
-const socket = io('http://localhost:4000', {
-  query: {
-    username: LocalUser
+// 搜索处理
+const getUserList = computed(() => {
+  const keyword = state.keyword;
+  if (!keyword) {
+    return state.userList;
+  } else {
+    return state.userList.filter((item) => {
+      return item.username.toLowerCase().includes(keyword.toLowerCase());
+    });
   }
 });
 
 // 改变发送用户
 const changeSession = (item) => {
-  toUser.value = item.socketId
-  chonseUser.value = item.username
-  console.log(chonseUser.value)
+  state.targetUser = item;
 };
 
 // 发送消息
 const sendMessage = (text) => {
-  informationArray.value.push({
-    isSend: true,
-    from: {
-      name: LocalUser,
-      avatarUrl: imga
-    },
-    content: text,
-    time: new Date().getTime(),
-    type: "text"
-  })
   if (!text.length) return;
-  socket.emit("send", {
-    formUser: LocalUser,
-    targetId: toUser.value,
-    msg: text
-  })
-}
-
-//  得到用户消息
-const getUser = () => {
-  socket.on('online', (data) => {
-    parentItems.value = data
-        .filter(item => item.username !== LocalUser)
-        .map(item => ({
-          username: item.username,
-          sentence: 'This is demo',
-          inforNum: 1,
-          imgUrl: imga,
-          isLoding: true,
-          socketId: item.Id
-        }));
+  appendMessage({
+    fromUserName: state.username,
+    toUsername: state.targetUser.username,
+    msg: text,
+    dataTime: new Date().getTime()
   });
-}
+  socket.emit("send", {
+    fromUserName: state.username,
+    targetId: state.targetUser.socketId,
+    msg: text
+  });
+};
+
+// 获取对应用户信息
+const messageList = computed(() => {
+  return (state.messageBox[state.username] && state.targetUser) ?
+      state.messageBox[state.username].filter(item => {
+        return item.fromUserName === state.targetUser.username ||
+            item.toUsername === state.targetUser.username
+      }) : [];
+})
+
+// 发送用户信息 建立连接
+const socket = io('http://localhost:4000', {
+  query: {
+    username: state.username
+  }
+});
 
 // 接受用户消息
 socket.on('receive', (data) => {
-  informationArray.value.push({
-    formUser: data.formUser,
-    isSend: false,
-    from: {
-      name: LocalUser,
-      avatarUrl: imga
-    },
-    content: data.msg,
-    time: data.dataTime,
-    type: "text"
-  })
-  console.log(informationArray.value)
-  console.log(parentItems.value)
+  appendMessage(data)
 })
 
 // 错误连接
@@ -152,18 +126,30 @@ socket.on('error', (err) => {
   console.log(err)
 })
 
-// 断开连接
-const disconnectSocket = () => {
-  socket.disconnect();
+// 获取用户信息
+socket.on('online', (data) => {
+  state.userList = data
+      .filter(item => item.username !== state.username)
+      .map(item => ({
+        username: item.username,
+        sentence: 'This is demo',
+        inforNum: 1,
+        imgUrl: imga,
+        isLoding: true,
+        socketId: item.Id
+      }));
+});
+
+function appendMessage(data) {
+  !state.messageBox[state.username] && (state.messageBox[state.username] = []);
+  state.messageBox[state.username].push(data);
 }
 
 // 在组件销毁前执行
-onBeforeUnmount(disconnectSocket);
-
-// 在组件挂载时执行搜索操作
-onMounted(() => {
-  getUser();
-});
+onBeforeUnmount(() => {
+      socket.disconnect();
+    }
+)
 
 
 // 备选方案

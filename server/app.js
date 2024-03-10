@@ -15,7 +15,6 @@ const io = new Server(server, {
 });
 
 io.on('connection', socket => {
-
     const username = socket.handshake.query.username
     if (!username) return;
     const userInfo = userList.find(user => user.name === username)
@@ -28,15 +27,15 @@ io.on('connection', socket => {
         })
         console.log(`添加用户 ${username}`);
     }
+
     io.emit("online", userList)
 
-    socket.on('send', ({formUser, targetId, msg}) => {
+    socket.on('send', ({fromUserName, targetId, msg}) => {
         const targetSocket = io.sockets.sockets.get(targetId);
         const toUser = userList.find(user => user.Id === targetId);
-        // console.log(targetSocket)
         targetSocket.emit('receive', {
-            formUser,
-            toUsername: toUser.username,
+            fromUserName,
+            toUserName: toUser.username,
             msg,
             dataTime: new Date().getTime()
         })
