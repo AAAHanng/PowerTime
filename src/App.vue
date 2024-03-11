@@ -1,26 +1,23 @@
 <template>
-<my-header></my-header>
-  <el-container style="width: 100%;">
-    <SideBar style="min-width: 200px"/>
-    <RouterView style="min-height: 100vh"/>
-  </el-container>
+  <div v-if="!$route.meta.showNav">
+    <myLayout >
+      <router-view></router-view>
+    </myLayout>
+  </div>
+  <div v-else>
+      <router-view></router-view>
+  </div>
 
-  <myFooter/>
 </template>
 
 
 <script >
 import {RouterLink, RouterView} from 'vue-router'
-import myFooter from "@/components/footer.vue";
-import myHeader from "@/components/header.vue";
-import SideBar from "@/components/sideBar.vue";
+import myLayout from "@/views/components/myLayout.vue";
 export default {
-  components:{
-    myHeader,
-    myFooter,
-    SideBar,
-
-  }
+components:{
+  myLayout
+}
 }
 </script>
 

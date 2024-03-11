@@ -9,29 +9,33 @@
             @close="handleClose"
             :router="true"
         >
-          <el-sub-menu index="1">
-            <template #title>
-              <el-icon>
-                <location/>
-              </el-icon>
-              <span>数据展示</span>
-            </template>
-            <el-menu-item index="1-3">item three</el-menu-item>
+<!--          <el-sub-menu index="1">-->
+<!--            <template #title>-->
+<!--              <el-icon>-->
+<!--                <location/>-->
+<!--              </el-icon>-->
+<!--              <span>数据展示</span>-->
+<!--            </template>-->
+<!--            <el-menu-item index="1-3">item three</el-menu-item>-->
 
-          </el-sub-menu>
+<!--          </el-sub-menu>-->
+          <el-menu-item index="/">
+            <el-icon><HomeFilled /></el-icon>
+            <span>首页</span>
+          </el-menu-item>
 
           <el-menu-item index="/order">
-            <el-icon> <icon-menu/></el-icon>
+            <el-icon><Checked /></el-icon>
             <span>订单</span>
           </el-menu-item>
 
           <el-menu-item index="/chat">
-            <el-icon> <icon-menu/></el-icon>
+            <el-icon><ChatRound /></el-icon>
             <span>聊天</span>
           </el-menu-item>
 
-          <el-menu-item index="4">
-            <el-icon> <icon-menu/></el-icon>
+          <el-menu-item index="/home">
+            <el-icon><UserFilled /></el-icon>
             <span>我的</span>
           </el-menu-item>
 
@@ -50,10 +54,10 @@
 
 <script setup>
 import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
+  HomeFilled,
+  Checked,
+  ChatRound,
+  UserFilled,
 } from '@element-plus/icons-vue'
 
 
