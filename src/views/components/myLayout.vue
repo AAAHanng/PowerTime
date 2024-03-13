@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import myFooter from "@/components/footer.vue";
-import myHeader from "@/components/header.vue";
-import SideBar from "@/components/sideBar.vue";
+import myFooter from '@/components/footerCom.vue'
+import myHeader from '@/components/headerCom.vue'
+import SideBar from '@/components/sideBar.vue'
 
 export default {
   components: {

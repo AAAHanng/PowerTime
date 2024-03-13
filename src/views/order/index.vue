@@ -17,10 +17,9 @@
 import orderCard from '@/views/components/orderCard.vue'
 
 export default {
-  name: "index",
   components: {
     orderCard
-  },
+  }
 }
 </script>
 

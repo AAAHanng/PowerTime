@@ -45,18 +45,18 @@
 </template>
 
 <script>
-import emoji from "@/assets/emoji.json";
-import {ElMessage} from "element-plus";
+import emoji from '@/assets/emoji.json'
+import { ElMessage } from 'element-plus'
 
 export default {
-  name: "UiSessionPanel",
+  name: 'UiSessionPanel',
   props: {
     session: {
       type: Object,
       default() {
         return {
-          name: "似水流年",
-          avatarUrl: "http://himg.bdimg.com/sys/portrait/item/90193135323338383137313237bc13.jpg"
+          name: '似水流年',
+          avatarUrl: 'http://himg.bdimg.com/sys/portrait/item/90193135323338383137313237bc13.jpg'
         }
       }
     },
@@ -67,17 +67,17 @@ export default {
   data() {
     return {
       isShow: false,
-      text: "",
+      text: '',
       emojiList: [],
-      emojiShow: false,
+      emojiShow: false
     }
   },
   mounted() {
     this.emojiList = emoji
     // 在组件加载后滚动到底部
     this.$nextTick(() => {
-      this.scrollToBottom();
-    });
+      this.scrollToBottom()
+    })
   },
   methods: {
 
@@ -86,55 +86,55 @@ export default {
     },
 
     sendText(text) {
-      text = text.replace(/^\s+|\s+$/g, '');
+      text = text.replace(/^\s+|\s+$/g, '')
       if (text) {
-        this.sendMessage(text, 'text');
+        this.sendMessage(text, 'text')
       }
       setTimeout(() => {
-        this.text = '';
+        this.text = ''
       }, 0)
     },
 
     photoChange(e) {
-      const reg = /\.(?:png|jpg|jepg)$/i;
-      let file = e.target.files[0];
+      const reg = /\.(?:png|jpg|jepg)$/i
+      let file = e.target.files[0]
       if (!reg.test(file.name)) {
-        ElMessage.warning("请选择正确格式的图片文件!");
+        ElMessage.warning('请选择正确格式的图片文件!')
         return
       }
-      let maxSize = 1024 * 1024;
+      let maxSize = 1024 * 1024
       if (file.size > maxSize) {
-        ElMessage.warning("图片大小不能超过1M!");
+        ElMessage.warning('图片大小不能超过1M!')
         return
       }
 
-      let reader = new FileReader();
-      reader.readAsDataURL(file); // 读出 base64
+      let reader = new FileReader()
+      reader.readAsDataURL(file) // 读出 base64
       reader.onloadend = () => {
-        let html = reader.result;
+        let html = reader.result
         this.sendMessage(html, 'image')
-      };
-    },
-    sendMessage(content, type) {
-      this.$emit("sendMessage", content, type)
-      this.scrollToBottom();
-    },
-    scrollToBottom() {
-      const messageContainer = this.$refs.messageContainer;
-      if (messageContainer) {
-        messageContainer.scrollTop = messageContainer.scrollHeight;
       }
     },
+    sendMessage(content, type) {
+      this.$emit('sendMessage', content, type)
+      this.scrollToBottom()
+    },
+    scrollToBottom() {
+      const messageContainer = this.$refs.messageContainer
+      if (messageContainer) {
+        messageContainer.scrollTop = messageContainer.scrollHeight
+      }
+    }
   },
   watch: {
     isJoin(newValue) {
       if (newValue) {
         this.$nextTick(() => {
-          this.scrollToBottom();
-        });
+          this.scrollToBottom()
+        })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

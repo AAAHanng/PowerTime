@@ -3,32 +3,32 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 
 export default {
   data() {
     return {
       // 数据等
-    };
+    }
   },
   props:{
     turnoverData:Array
   },
   mounted() {
-    this.initChart();
+    this.initChart()
   },
   methods: {
     initChart() {
       // 获取图表容器
-      const chartContainer = this.$refs.chart;
+      const chartContainer = this.$refs.chart
 
       // 初始化 ECharts 实例
-      const myChart = echarts.init(chartContainer);
+      const myChart = echarts.init(chartContainer)
 
       // 设置图表配置项和数据
       const option = {
         title: {
-          text: '营业额',
+          text: '营业额'
         },
         tooltip: {
           trigger: 'axis',
@@ -55,14 +55,14 @@ export default {
             label: {
               show: true,
               position: 'top'
-            },
+            }
           }
         ]
-      };
+      }
 
       // 使用刚指定的配置项和数据显示图表
-      myChart.setOption(option);
+      myChart.setOption(option)
     }
   }
-};
+}
 </script>

@@ -7,10 +7,10 @@
         <el-row>
           <el-text class="pendingText">待处理订单</el-text>
         </el-row>
-        <el-row class="pendingCharts" >
-          <el-col :span="5" class="pendingChart" v-for="item of chartsData" >
-            <Pie :centerX="110" :centerY="80" :lineWidth="16" :radius="60" :data="item.data" :cWidth="100"
-                 :cHeight="100" :totalOrder="this.totalOrder"></Pie>
+        <el-row class="pendingCharts">
+          <el-col :span="5" class="pendingChart" v-for="(item, index) of chartsData" :key="index">
+            <Pie :centerX="110" :centerY="80" :lineWidth="16" :radius="60" :data="item.data"
+                 :cWidth="100" :cHeight="100" :totalOrder="totalOrder"></Pie>
             {{ item.chartText }}
           </el-col>
         </el-row>
@@ -59,11 +59,11 @@
 
 <script>
 import Pie from '@/components/pie.vue'
-import AreaChart from "@/components/areaChart.vue";
-import {ref} from "vue";
+import AreaChart from '@/components/areaChart.vue'
+import { ref } from 'vue'
 
 export default {
-  name: "index",
+  name: 'index',
   components: {
     Pie,
     AreaChart
@@ -103,7 +103,7 @@ export default {
         {
           data: 89,
           chartText: '配送中'
-        },
+        }
 
       ],
       totalOrder: ref(0),
@@ -202,7 +202,6 @@ export default {
     .el-text{
       color: black;
     }
-
 
 
     .count {

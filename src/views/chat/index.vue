@@ -41,13 +41,13 @@
 </template>
 
 <script setup>
-import {computed, onBeforeUnmount, reactive} from 'vue';
-import io from 'socket.io-client';
-import UserItem from "@/views/chat/components/UserItem.vue";
-import ChatCard from "@/views/chat/components/ChatCard.vue";
-import UiChatBubble from "@/views/chat/components/UiChatBubble.vue";
-import router from "@/router/index.js";
-import imga from "@/assets/img/user.png"
+import { computed, onBeforeUnmount, reactive } from 'vue'
+import io from 'socket.io-client'
+import UserItem from '@/views/chat/components/UserItem.vue'
+import ChatCard from '@/views/chat/components/ChatCard.vue'
+import UiChatBubble from '@/views/chat/components/UiChatBubble.vue'
+import router from '@/router/index.js'
+import imga from '@/assets/img/user.png'
 
 
 const state = reactive({
@@ -56,11 +56,11 @@ const state = reactive({
   targetUser: null,
   messageBox: {},
   keyword: null
-});
+})
 
 // 是否选择了用户
 const isToUserNotEmpty = () => {
-  return !!state.targetUser;
+  return !!state.targetUser
 }
 
 // 搜索用户列表
@@ -70,46 +70,46 @@ const handleSearch = (keyword) => {
 
 // 搜索处理
 const getUserList = computed(() => {
-  const keyword = state.keyword;
+  const keyword = state.keyword
   if (!keyword) {
-    return state.userList;
+    return state.userList
   } else {
     return state.userList.filter((item) => {
-      return item.username.toLowerCase().includes(keyword.toLowerCase());
-    });
+      return item.username.toLowerCase().includes(keyword.toLowerCase())
+    })
   }
-});
+})
 
 // 改变发送用户
 const changeSession = (item) => {
-  state.targetUser = item;
-};
+  state.targetUser = item
+}
 
 // 发送消息
 const sendMessage = (text, type) => {
-  if (!text.length) return;
+  if (!text.length) return
   appendMessage({
     fromUserName: state.username,
     toUsername: state.targetUser.username,
     msg: text,
     dataTime: new Date().getTime(),
     type: type
-  });
-  socket.emit("send", {
+  })
+  socket.emit('send', {
     fromUserName: state.username,
     targetId: state.targetUser.socketId,
     msg: text,
     type:type
-  });
-};
+  })
+}
 
 // 获取对应用户信息
 const messageList = computed(() => {
   return (state.messageBox[state.username] && state.targetUser) ?
-      state.messageBox[state.username].filter(item => {
-        return item.fromUserName === state.targetUser.username ||
+    state.messageBox[state.username].filter(item => {
+      return item.fromUserName === state.targetUser.username ||
             item.toUsername === state.targetUser.username
-      }) : [];
+    }) : []
 })
 
 // 发送用户信息 建立连接
@@ -117,7 +117,7 @@ const socket = io(import.meta.env.VITE_BACKEND_URL, {
   query: {
     username: state.username
   }
-});
+})
 
 // 接受用户消息
 socket.on('receive', (data) => {
@@ -133,27 +133,27 @@ socket.on('error', (err) => {
 // 获取用户信息
 socket.on('online', (data) => {
   state.userList = data
-      .filter(item => item.username !== state.username)
-      .map(item => ({
-        username: item.username,
-        sentence: 'This is demo',
-        inforNum: 1,
-        imgUrl: imga,
-        isLoding: true,
-        socketId: item.Id
-      }));
-});
+    .filter(item => item.username !== state.username)
+    .map(item => ({
+      username: item.username,
+      sentence: 'This is demo',
+      inforNum: 1,
+      imgUrl: imga,
+      isLoding: true,
+      socketId: item.Id
+    }))
+})
 
 function appendMessage(data) {
-  !state.messageBox[state.username] && (state.messageBox[state.username] = []);
-  state.messageBox[state.username].push(data);
+  !state.messageBox[state.username] && (state.messageBox[state.username] = [])
+  state.messageBox[state.username].push(data)
 }
 
 
 // 在组件销毁前执行
 onBeforeUnmount(() => {
-      socket.disconnect();
-    }
+  socket.disconnect()
+}
 )
 
 

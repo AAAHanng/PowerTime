@@ -1,6 +1,6 @@
 <template>
 <!--订单卡片-->
-  <el-card v-for="item in order">
+  <el-card v-for="item in order" :key="item.orderID">
     <div class="card-header">
       <span>订单号：{{ order[0].orderID }}</span>
       <span>创建时间：{{ order[0].createTime }}</span>

@@ -39,34 +39,34 @@
 
 
 <script>
-import emoji from "@/assets/emoji.json"
+import emoji from '@/assets/emoji.json'
 
 export default {
-  name: "UiChatBubble",
+  name: 'UiChatBubble',
   methods: {
     TimeChang(value) {
-      let time = new Date().getTime();
-      time = parseInt((time - value) / 1000);
+      let time = new Date().getTime()
+      time = parseInt((time - value) / 1000)
       //存储转换值
-      let s;
+      let s
       if (time < 60 * 3) {//三分钟内
-        return '刚刚';
+        return '刚刚'
       } else if ((time < 60 * 60) && (time >= 60 * 3)) {
         //超过十分钟少于1小时
-        s = Math.floor(time / 60);
-        return s + "分钟前";
+        s = Math.floor(time / 60)
+        return s + '分钟前'
       } else if ((time < 60 * 60 * 24) && (time >= 60 * 60)) {
         //超过1小时少于24小时
-        s = Math.floor(time / 60 / 60);
-        return s + "小时前";
+        s = Math.floor(time / 60 / 60)
+        return s + '小时前'
       } else if ((time < 60 * 60 * 24 * 3) && (time >= 60 * 60 * 24)) {
         //超过1天少于3天内
-        s = Math.floor(time / 60 / 60 / 24);
-        return s + "天前";
+        s = Math.floor(time / 60 / 60 / 24)
+        return s + '天前'
       } else {
         //超过3天
-        let date = new Date(value);
-        return date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate();
+        let date = new Date(value)
+        return date.getFullYear() + '.' + (date.getMonth() + 1) + '.' + date.getDate()
       }
     }
   },
@@ -85,7 +85,7 @@ export default {
         }
       }
     }, message: {
-      type: Object,
+      type: Object
     }
   },
   data() {

@@ -10,14 +10,13 @@
 
 </template>
 
-
 <script >
-import {RouterLink, RouterView} from 'vue-router'
-import myLayout from "@/views/components/myLayout.vue";
+import myLayout from '@/views/components/myLayout.vue'
+
 export default {
-components:{
-  myLayout
-}
+  components: {
+    myLayout
+  }
 }
 </script>
 

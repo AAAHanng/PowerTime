@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import imga from "@/assets/img/user.png"
+import imga from '@/assets/img/user.png'
 
 export default {
   data() {
@@ -36,34 +36,34 @@ export default {
     items: {
       type: Array,
       default() {
-        return {
-          items: {
+        return [
+          {
             username: '客户A',
             sentence: '好勒',
             inforNum: 32,
             imgUrl: imga
           }
-        }
+        ]
       }
-    },
+    }
   },
   methods: {
     search() {
-      const keyword = this.keyword.trim();
-      this.$emit('search', keyword);
+      const keyword = this.keyword.trim()
+      this.$emit('search', keyword)
     },
     changeSession(item, itemIndex) {
-      const elements = this.$refs.UserList;
+      const elements = this.$refs.UserList
       elements.forEach((element, index) => {
-        element.classList.remove('activeUser');
+        element.classList.remove('activeUser')
         if (index === itemIndex) {
-          element.classList.add('activeUser');
+          element.classList.add('activeUser')
         }
-      });
+      })
       this.$emit('changSession', item)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
