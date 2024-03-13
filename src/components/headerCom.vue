@@ -18,7 +18,7 @@ export default {
 
 <style scoped lang="scss">
 header {
-  min-height: 5vh;
+  height: 5vh;
   background-color: var(--el-color-primary-blue-3);
   display: flex;
   justify-content: space-between;

@@ -3,7 +3,7 @@
     <my-header></my-header>
     <el-container style="width: 100%;">
       <SideBar style="min-width: 200px"/>
-      <slot></slot> <!-- 这里插入子组件 -->
+      <RouterView />
     </el-container>
     <myFooter/>
   </div>
@@ -25,6 +25,6 @@ export default {
 <style scoped lang="scss">
 
 .el-container{
-  min-height: 100vh;
+  height: 90vh;
 }
 </style>

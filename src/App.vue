@@ -1,25 +1,15 @@
 <template>
-  <div v-if="!$route.meta.showNav">
-    <myLayout >
-      <router-view></router-view>
-    </myLayout>
-  </div>
-  <div v-else>
+  <div>
       <router-view></router-view>
   </div>
-
 </template>
 
 <script >
-import myLayout from '@/views/components/myLayout.vue'
-
-export default {
-  components: {
-    myLayout
-  }
-}
 </script>
 
 <style scoped lang="scss">
+div{
+  height: 100vh;
+}
 
 </style>

@@ -22,49 +22,47 @@
 
 <script setup>
 import '@/assets/login/iconfont.css'
-import { ref, reactive } from "vue";
-import axios from "axios";
+import { ref, reactive } from 'vue'
+import axios from 'axios'
 import router from '@/router'
 
 
-
-
-const passwordInput = ref();
-const iconHide = ref();
+const passwordInput = ref()
+const iconHide = ref()
 
 // 输入框
 // 测试时默认值分别为admin1 和 123456
 // 开发结束后均改为空字符串
 const logindata = reactive({
-  account: "admin1",
-  password: "123456",
-});
+  account: 'admin1',
+  password: '123456'
+})
 
 //改变密码显示状态
 function changPasswordShow() {
-  passwordInput.value.type = passwordInput.value.type === "password" ? "text" : "password";
-  iconHide.value.className = iconHide.value.className.indexOf("icon-hide") > -1 ? "iconfont icon-browse icon" : "iconfont icon-hide icon";
+  passwordInput.value.type = passwordInput.value.type === 'password' ? 'text' : 'password'
+  iconHide.value.className = iconHide.value.className.indexOf('icon-hide') > -1 ? 'iconfont icon-browse icon' : 'iconfont icon-hide icon'
 }
 
 //处理登录请求
 async function loginHandle() {
-  const params = { ...logindata };
-  let parm = new URLSearchParams();
-  parm.append("username", logindata.account);
-  parm.append("password", logindata.password);
+  const params = { ...logindata }
+  let parm = new URLSearchParams()
+  parm.append('username', logindata.account)
+  parm.append('password', logindata.password)
 
   axios({
     method: 'POST',
     url:'http://localhost:8080/user/login',
     data: parm
   }).then(res =>{
-        if(res.data.code===200){
-          router.push({path:"/home"})
-          sessionStorage.setItem("token",res.data.data[0].token)
-        }else {
-          alert("登录失败")
-        }
-      }
+    if(res.data.code===200){
+      router.push({ path:'/home' })
+      sessionStorage.setItem('token',res.data.data[0].token)
+    }else {
+      alert('登录失败')
+    }
+  }
   )
 }
 </script>
