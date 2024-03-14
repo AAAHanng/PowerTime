@@ -40,26 +40,5 @@ const router = createRouter({
   ]
 })
 
-// 拦截器
-/* router.beforeEach((to, from, next) => {
-  if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-    let parm = new URLSearchParams();
-    let token = window.sessionStorage.getItem('token');
-    parm.append("token", token);
-    axios({
-      url: 'http://localhost:8080/user/checkToken',
-      method: 'post',
-      data: parm
-    }).then(response => {
-      if (response.data.code===400) { //如何token解析失败，跳转到登录页面
-        next('/login');
-      } else {
-        next()
-      }
-    })
-  } else {
-    next()
-  }
-}); */
 
 export default router

@@ -61,6 +61,7 @@
 import Pie from '@/components/pie.vue'
 import AreaChart from '@/components/areaChart.vue'
 import { ref } from 'vue'
+import { getInfo } from '@/api/products.js'
 
 export default {
   name: 'index',
@@ -109,6 +110,9 @@ export default {
       totalOrder: ref(0),
       turnoverData:[5230,6489,7725,9341,13480,6563,5230,6489,7725,9341,13480,6563]
     }
+  },
+  mounted () {
+    getInfo()
   },
   methods: {},
   beforeMount() {

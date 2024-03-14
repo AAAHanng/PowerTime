@@ -13,6 +13,7 @@
     "echarts": "^5.5.0",
     "element-plus": "^2.4.4",
     "express": "^4.18.3",
+    "js-cookie": "^3.0.5",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "vue": "^3.3.11",

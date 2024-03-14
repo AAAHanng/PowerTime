@@ -6,65 +6,89 @@
       <!-- 输入 -->
       <div class="input-wrapper">
         <i class="iconfont icon-user-filling icon"></i>
-        <input placeholder="请输入账号" v-model="logindata.account" />
+        <input placeholder="请输入账号" v-model="loginData.email" />
       </div>
       <div class="input-wrapper">
         <i class="iconfont icon-lock icon"></i>
-        <input type="password" placeholder="请输入密码" v-model="logindata.password" ref="passwordInput" />
-        <i class="iconfont icon-hide icon" @click="changPasswordShow" ref="iconHide"></i>
+        <input type="password" placeholder="请输入密码" v-model="loginData.code" />
+        <el-button type="success" @click="getCodeHandle" :disabled="disabled">{{ valiBtn }}</el-button>
       </div>
-
+      <div>
+        <input type="checkbox" id="rememberMe" name="rememberMe"  v-model="loginData.rememberMe">
+        <label for="rememberMe">记住账号</label><br><br>
+      </div>
       <button class="loginbt" @click="loginHandle">登 录</button>
-<!--      <p class="tip">账号:admin1&nbsp;&nbsp;&nbsp;密码:123456</p>-->
     </div>
   </div>
 </template>
 
 <script setup>
 import '@/assets/login/iconfont.css'
-import { ref, reactive } from 'vue'
-import axios from 'axios'
-import router from '@/router'
+import { reactive, onMounted, ref } from 'vue'
+import { getCode } from '@/api/products.js'
+import store from '@/store/index.js'
+import router from '@/router/index.js'
+import Cookies from 'js-cookie'
+import { ElMessage } from 'element-plus'
 
-
-const passwordInput = ref()
-const iconHide = ref()
-
-// 输入框
-// 测试时默认值分别为admin1 和 123456
-// 开发结束后均改为空字符串
-const logindata = reactive({
-  account: 'admin1',
-  password: '123456'
+const loginData = reactive({
+  email: '',
+  code: '',
+  rememberMe:''
 })
 
-//改变密码显示状态
-function changPasswordShow() {
-  passwordInput.value.type = passwordInput.value.type === 'password' ? 'text' : 'password'
-  iconHide.value.className = iconHide.value.className.indexOf('icon-hide') > -1 ? 'iconfont icon-browse icon' : 'iconfont icon-hide icon'
+const disabled = ref(false)
+const valiBtn=ref('获取验证码')
+
+onMounted(()=>{
+  getCookie()
+})
+
+const tackBtn = ()=>{
+  let time = 60
+  let timer = setInterval(() => {
+    if(time === 0){
+      clearInterval(timer)
+      valiBtn.value = '获取验证码'
+      disabled.value = false
+    }else{
+      disabled.value = true
+      valiBtn.value = time + '秒后重试'
+      time--
+    }
+  }, 1000)
+}
+
+const getCookie = ()=>{
+  const email = Cookies.get('email')
+  const rememberMe = Cookies.get('rememberMe')
+  loginData.email = email === undefined ? loginData.email : email
+  loginData.rememberMe = rememberMe === undefined ? false : Boolean(rememberMe)
 }
 
 //处理登录请求
-async function loginHandle() {
-  const params = { ...logindata }
-  let parm = new URLSearchParams()
-  parm.append('username', logindata.account)
-  parm.append('password', logindata.password)
-
-  axios({
-    method: 'POST',
-    url:'http://localhost:8080/user/login',
-    data: parm
-  }).then(res =>{
-    if(res.data.code===200){
-      router.push({ path:'/home' })
-      sessionStorage.setItem('token',res.data.data[0].token)
-    }else {
-      alert('登录失败')
-    }
+const loginHandle=()=> {
+  if(loginData.rememberMe){
+    Cookies.set('email',loginData.email)
+    Cookies.set('rememberMe',loginData.rememberMe)
+  }else{
+    Cookies.remove('email')
+    Cookies.remove('rememberMe')
   }
-  )
+  store.dispatch('user/login',loginData).then(()=>{
+    ElMessage.success('登录成功')
+    router.push({ path:'/' })
+  })
+
 }
+
+const getCodeHandle = () => {
+  getCode(loginData.email)
+  tackBtn()
+  ElMessage.success('验证码发送成功')
+}
+
+
 </script>
 
 <style lang="scss" scoped>
