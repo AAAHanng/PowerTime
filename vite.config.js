@@ -21,10 +21,9 @@ export default defineConfig(({ command, mode }) => {
       open: true,
       host: '0.0.0.0',
       proxy: {
-        '/api': {
+        [env.VITE_BASE_API]: {
           target: env.VITE_API,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          changeOrigin: true
         }
       }
     },

@@ -32,7 +32,7 @@ import Cookies from 'js-cookie'
 import { ElMessage } from 'element-plus'
 
 const loginData = reactive({
-  email: '',
+  email: '1664674148@qq.com',
   code: '',
   rememberMe:''
 })
@@ -60,8 +60,8 @@ const tackBtn = ()=>{
 }
 
 const getCookie = ()=>{
-  const email = Cookies.get('email')
-  const rememberMe = Cookies.get('rememberMe')
+  const email = Cookies.get('email', { expires: 30 })
+  const rememberMe = Cookies.get('rememberMe', { expires: 30 })
   loginData.email = email === undefined ? loginData.email : email
   loginData.rememberMe = rememberMe === undefined ? false : Boolean(rememberMe)
 }
