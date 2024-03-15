@@ -74,4 +74,6 @@ body html #app{
   --el-bg-color-page: #F2F3F5;
   --el-basic-black: #000000;
   --el-basic-white: #FFFFFF;
+
+  --el-background-grey: #FBFBFB
 }

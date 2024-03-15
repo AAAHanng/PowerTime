@@ -2,7 +2,7 @@
   <!--首页-->
   <div class="main">
     <!--    待处理-->
-    <el-row class="pending" >
+    <el-row class="pending">
       <el-col :span="16">
         <el-row>
           <el-text class="pendingText">待处理订单</el-text>
@@ -61,7 +61,7 @@
 import Pie from '@/components/pie.vue'
 import AreaChart from '@/components/areaChart.vue'
 import { ref } from 'vue'
-import { getInfo } from '@/api/products.js'
+import { getInfo } from '@/api/order.js'
 
 export default {
   name: 'index',
@@ -83,7 +83,7 @@ export default {
         },
         {
           data: 12,
-          chartText: '交易完毕'
+          chartText: '交易成功'
         },
         {
           data: 16,
@@ -108,20 +108,18 @@ export default {
 
       ],
       totalOrder: ref(0),
-      turnoverData:[5230,6489,7725,9341,13480,6563,5230,6489,7725,9341,13480,6563]
+      turnoverData: [5230, 6489, 7725, 9341, 13480, 6563, 5230, 6489, 7725, 9341, 13480, 6563]
     }
   },
-  mounted () {
+  mounted() {
     getInfo()
   },
-  methods: {},
-  beforeMount() {
-    for (let i = 0; i < this.chartsData.length; i++) {
-      this.totalOrder += this.chartsData[i].data
-    }
-
-
-  }
+  methods: {}
+  // onBeforeMount() {
+  //   for (let i = 0; i < this.chartsData.length; i++) {
+  //     this.totalOrder += this.chartsData[i].data
+  //   }
+  // },
 
 }
 </script>
@@ -140,7 +138,8 @@ export default {
   .el-col {
     padding: 0 1rem;
   }
-  .pendingDisable{
+
+  .pendingDisable {
     background-color: grey;
   }
 
@@ -203,7 +202,8 @@ export default {
 
     padding: 3rem;
     border-radius: 20px;
-    .el-text{
+
+    .el-text {
       color: black;
     }
 

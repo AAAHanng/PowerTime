@@ -25,7 +25,7 @@
 <script setup>
 import '@/assets/login/iconfont.css'
 import { reactive, onMounted, ref } from 'vue'
-import { getCode } from '@/api/products.js'
+import { getCode } from '@/api/order.js'
 import store from '@/store/index.js'
 import router from '@/router/index.js'
 import Cookies from 'js-cookie'

@@ -12,7 +12,11 @@ const router = createRouter({
         {
           path:'index',
           component: () => import('@/views/index/index.vue'),
-          name:'index'
+          name:'index',
+          children:[
+
+          ]
+
         },
         {
           path: '/order',

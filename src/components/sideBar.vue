@@ -9,16 +9,7 @@
             @close="handleClose"
             :router="true"
         >
-<!--          <el-sub-menu index="1">-->
-<!--            <template #title>-->
-<!--              <el-icon>-->
-<!--                <location/>-->
-<!--              </el-icon>-->
-<!--              <span>数据展示</span>-->
-<!--            </template>-->
-<!--            <el-menu-item index="1-3">item three</el-menu-item>-->
 
-<!--          </el-sub-menu>-->
           <el-menu-item index="/">
             <el-icon><HomeFilled /></el-icon>
             <span>首页</span>
