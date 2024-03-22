@@ -44,11 +44,11 @@
           <el-row>
             <el-text class="turnoverText">今日营业额</el-text>
           </el-row>
-          <el-text class="count">￥{{ turnoverToday }}</el-text>
+          <el-text class="count">￥{{ turnover }}</el-text>
           <el-row>
             <el-text class="turnoverText">今日订单</el-text>
           </el-row>
-          <el-text class="count">{{ orderToday }}</el-text>
+          <el-text class="count">{{ orders }}份</el-text>
         </el-row>
       </el-col>
     </el-row>
@@ -57,11 +57,12 @@
 
 </template>
 
-<script>
+<script >
 import Pie from '@/components/pie.vue'
 import AreaChart from '@/components/areaChart.vue'
 import { ref } from 'vue'
 import { getInfo } from '@/api/order.js'
+import { GetChartStatistics, GetTodayStatistics } from '@/api/home.js'
 
 export default {
   name: 'index',
@@ -73,8 +74,8 @@ export default {
     return {
       badReviews: '0',
       appraise: '0',
-      turnoverToday: '1345',
-      orderToday: '334',
+      turnover: ref(0),
+      orders: ref(0),
       id: '1',
       chartsData: [
         {
@@ -108,18 +109,44 @@ export default {
 
       ],
       totalOrder: ref(0),
-      turnoverData: [5230, 6489, 7725, 9341, 13480, 6563, 5230, 6489, 7725, 9341, 13480, 6563]
+      turnoverData: ref([])
     }
   },
   mounted() {
-    getInfo()
+    // getInfo()
+    this.GetTodayStatistics()
   },
-  methods: {}
-  // onBeforeMount() {
-  //   for (let i = 0; i < this.chartsData.length; i++) {
-  //     this.totalOrder += this.chartsData[i].data
-  //   }
-  // },
+  create() {
+    this.GetChartStatistics()
+  },
+
+  methods: {
+    GetTodayStatistics() {
+      this.$api.home.GetTodayStatistics({
+        storeId: '2'
+      }).then(response => {
+        this.orders = response.data.data.orders
+        this.turnover = response.data.data.turnover
+      })
+    },
+    GetChartStatistics() {
+      this.$api.home.GetChartStatistics({
+        storeId: '2'
+      }).then(response => {
+        this.turnoverData = response.data.data
+        console.log(this.turnoverData)
+      })
+    }
+
+  },
+
+  beforeMount() {
+    for (let i = 0; i < this.chartsData.length; i++) {
+      this.totalOrder += this.chartsData[i].data
+    }
+
+  }
+
 
 }
 </script>

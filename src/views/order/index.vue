@@ -62,9 +62,9 @@
       <el-col :span="1"></el-col>
       <el-col :span="5">订单</el-col>
       <el-col :span="4">数量</el-col>
-      <el-col :span="3">交易状态</el-col>
+      <el-col :span="4">交易状态</el-col>
       <el-col :span="4">实收款</el-col>
-      <el-col :span="4" >评价</el-col>
+      <el-col :span="4">评价</el-col>
 
     </el-row>
     <order-card></order-card>
@@ -150,6 +150,7 @@ export default {
     search() {
 
     },
+
     handleSizeChange(val) {
       console.log(`${val} items per page`)
     },
@@ -182,7 +183,7 @@ export default {
   min-height: 0 !important;
   height: 40px;
   padding-left: 10px;
-  background-color: #FFFFFF;
+  background-color: #FBFBFB;
   box-shadow: #dadada 3px 3px 4px;
 }
 

@@ -1,27 +1,25 @@
 import request from '@/utils/request.js'
 
-export function getAll(params) {
+export function GetTodayStatistics(data) {
   return request({
     method: 'GET',
-    url: '/products',
-    params
+    url: '/order/today-statistics',
+    params: {
+      ...data
+    }
   })
 }
 
-export function getOne(id) {
+export function GetChartStatistics(data) {
   return request({
-    method: 'GET',
-    url: `/products/${id}`
+    method:'GET',
+    url:'/order/chart-statistics',
+    params:{
+      ...data
+    }
   })
 }
 
-export function update(id, data) {
-  return request({
-    method: 'PUT',
-    url: `/products/${id}`,
-    data
-  })
-}
 
 export function getCode(data) {
   return request({

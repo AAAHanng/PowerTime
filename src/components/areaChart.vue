@@ -11,8 +11,8 @@ export default {
       // 数据等
     }
   },
-  props:{
-    turnoverData:Array
+  props: {
+    turnoverData: Array
   },
   mounted() {
     this.initChart()
@@ -24,7 +24,28 @@ export default {
 
       // 初始化 ECharts 实例
       const myChart = echarts.init(chartContainer)
-
+      // 营业额数据结构转换
+      const seriesData = this.turnoverData.map(item => item.money)
+      // 月份转化
+      function getChineseMonth(month) {
+        const monthsMap = {
+          '01': '1月',
+          '02': '2月',
+          '03': '3月',
+          '04': '4月',
+          '05': '5月',
+          '06': '6月',
+          '07': '7月',
+          '08': '8月',
+          '09': '9月',
+          '10': '10月',
+          '11': '11月',
+          '12': '12月'
+        }
+        return monthsMap[month]
+      }
+      // x轴，即月份数据结构转化
+      const xAxisData = this.turnoverData.map(item => getChineseMonth(item.months))
       // 设置图表配置项和数据
       const option = {
         title: {
@@ -39,7 +60,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['1月', '2月', '3月', '4月', '5月', '6月']
+          data: xAxisData
         },
         yAxis: {
           type: 'value'
@@ -51,10 +72,13 @@ export default {
             stack: '总量',
             areaStyle: {},
             smooth: true, // 将折线改为光滑的曲线
-            data: this.turnoverData,
+            data: seriesData,
             label: {
               show: true,
-              position: 'top'
+              position: 'right',
+              textStyle: {
+                fontSize: 18 // 设置字体大小
+              }
             }
           }
         ]
