@@ -29,6 +29,10 @@
             <el-icon><UserFilled /></el-icon>
             <span>我的</span>
           </el-menu-item>
+          <el-menu-item index="/home">
+            <el-icon><Tools /></el-icon>
+            <span>设置</span>
+          </el-menu-item>
 
 
           <!--        <el-menu-item index="3" disabled>
@@ -48,7 +52,9 @@ import {
   HomeFilled,
   Checked,
   ChatRound,
-  UserFilled
+  UserFilled,
+  Setting,
+  Tools
 } from '@element-plus/icons-vue'
 
 
@@ -61,5 +67,10 @@ const handleClose = (key, keyPath) => {
 </script>
 
 <style scoped>
+/deep/ .el-menu{
+  min-height: 90vh;
+}
+.main{
 
+}
 </style>

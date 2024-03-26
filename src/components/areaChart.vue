@@ -14,7 +14,7 @@ export default {
   props: {
     turnoverData: Array
   },
-  mounted() {
+  updated() {
     this.initChart()
   },
   methods: {

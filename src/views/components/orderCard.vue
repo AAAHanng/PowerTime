@@ -17,7 +17,8 @@
       <el-table-column prop="goodsName" width="300">
         <template #default="scope">
           <div class="goods">
-            <img src='https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg' alt="未上传图片" class="goodsImg">
+            <img src='https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg' alt="未上传图片"
+                 class="goodsImg">
             <el-text class="goodsName">{{ scope.row.goodsName }}</el-text>
           </div>
         </template>
@@ -42,27 +43,41 @@
       <el-col>
         <el-scrollbar height="400px">
 
-        <el-descriptions
-            direction="vertical"
-            :column="4"
-            border
-            v-for="(item,index) of Order"
-            :key="index"
-            class="lookDetail"
-        >
-          <el-descriptions-item label="订单编号">{{ item.orderID }}</el-descriptions-item>
-          <el-descriptions-item label="创建时间">{{ item.createTime }}</el-descriptions-item>
-          <el-descriptions-item label="商品名称">{{ item.goodsName }}</el-descriptions-item>
-          <el-descriptions-item label="数量">{{ item.quantity }}</el-descriptions-item>
-          <el-descriptions-item label="总金额">{{ item.goodsTotalAmount }}</el-descriptions-item>
-          <el-descriptions-item label="收货人姓名">{{ item.Name }}</el-descriptions-item>
-          <el-descriptions-item label="收货人电话">{{ item.phone }}</el-descriptions-item>
-          <el-descriptions-item label="收货地址">{{ item.address }}</el-descriptions-item>
-          <el-descriptions-item label="买家留言">{{ item.storeInfo }}</el-descriptions-item>
-          <el-descriptions-item label="支付状态">{{ item.orderPay }}</el-descriptions-item>
-          <el-descriptions-item label="订单状态">{{ item.orderStatus }}</el-descriptions-item>
-          <el-descriptions-item label="是否评价">{{ item.appraise }}</el-descriptions-item>
-        </el-descriptions>
+          <el-descriptions
+              direction="vertical"
+              :column="4"
+              border
+              class="lookDetail"
+          >
+            <el-descriptions-item label="订单编号">{{ Order[0].orderID }}</el-descriptions-item>
+            <el-descriptions-item label="创建时间">{{ Order[0].createTime }}</el-descriptions-item>
+            <el-descriptions-item label="商品名称">{{ Order[0].goodsName }}</el-descriptions-item>
+            <el-descriptions-item label="总金额">{{ Order[0].goodsTotalAmount }}</el-descriptions-item>
+            <el-descriptions-item label="收货人姓名">{{ Order[0].Name }}</el-descriptions-item>
+            <el-descriptions-item label="收货人电话">{{ Order[0].phone }}</el-descriptions-item>
+            <el-descriptions-item label="收货地址">{{ Order[0].address }}</el-descriptions-item>
+            <el-descriptions-item label="买家留言">{{ Order[0].storeInfo }}</el-descriptions-item>
+            <el-descriptions-item label="支付状态">{{ Order[0].orderPay }}</el-descriptions-item>
+            <el-descriptions-item label="订单状态">{{ Order[0].orderStatus }}</el-descriptions-item>
+            <el-descriptions-item label="是否评价">{{ Order[0].appraise }}</el-descriptions-item>
+          </el-descriptions>
+
+
+          <el-descriptions
+              direction="vertical"
+              :column="4"
+              border
+              v-for="(item,index) of Order"
+              :key="index"
+              class="lookDetail"
+          >
+            <el-descriptions-item label="商品名称">{{ item.goodsName }}</el-descriptions-item>
+            <el-descriptions-item label="缩略图"><img
+                :src="item.img" alt="暂无"
+                class="describeImg"></el-descriptions-item>
+            <el-descriptions-item label="数量">{{ item.quantity }}</el-descriptions-item>
+            <el-descriptions-item label="总金额">{{ item.goodsTotalAmount }}</el-descriptions-item>
+          </el-descriptions>
         </el-scrollbar>
       </el-col>
 
@@ -71,7 +86,7 @@
 
     <template #footer>
       <div class="dialog-footer">
-<!--        <el-button @click="dialogVisible = false"></el-button>-->
+        <!--        <el-button @click="dialogVisible = false"></el-button>-->
         <el-button type="primary" @click="dialogVisible = false">
           确认
         </el-button>
@@ -95,7 +110,8 @@ const Order = [{
   storeInfo: '请尽快',
   orderPay: '已支付',
   orderStatus: '配送中',
-  appraise: '已评价'
+  appraise: '已评价',
+  img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
 }, {
   orderID: '123456',
   createTime: '2024-01-15',
@@ -108,7 +124,8 @@ const Order = [{
   storeInfo: '请尽快',
   orderPay: '已支付',
   orderStatus: '配送中',
-  appraise: '已评价'
+  appraise: '已评价',
+  img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
 }]
 
 let dialogVisible = ref(false)
@@ -181,7 +198,12 @@ const handleSelectionChange = function (val) {
   text-overflow: ellipsis;
 
 }
-.lookDetail{
+
+.lookDetail {
   margin-bottom: 2rem;
+}
+
+.describeImg {
+  width: 100px;
 }
 </style>

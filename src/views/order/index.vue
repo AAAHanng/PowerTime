@@ -1,19 +1,19 @@
 <template>
   <!--  订单-->
   <div class="main">
-    <el-row :gutter="20" class="searchArea" justify="space-between">
-      <el-col :span="5">
+    <el-row gutter="20" class="searchArea" justify="space-between">
+      <el-col :span="6">
         <el-input
-            v-model="orderID"
+            v-model="searchInfo.orderId"
             style="max-width: 600px"
             placeholder="请输入订单号"
         >
           <template #prepend>订单号：</template>
         </el-input>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="6">
         <el-input
-            v-model="goodsName"
+            v-model="searchInfo.name"
             style="max-width: 600px"
             placeholder="请输入商品名称"
         >
@@ -21,9 +21,9 @@
         </el-input>
       </el-col>
 
-      <el-col :span="5">
+      <el-col :span="6">
         订单状态
-        <el-select v-model="statusSelect" placeholder="全部状态" @change="statusSelect">
+        <el-select v-model="searchInfo.status" placeholder="全部状态" @change="statusSelect">
           <el-option
               v-for="item in orderStatus"
               :key="item.value"
@@ -32,9 +32,9 @@
           />
         </el-select>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="6">
         评价
-        <el-select v-model="appraiseSelect" placeholder="全部状态" @change="appraiseSelect">
+        <el-select v-model="searchInfo.appraise" placeholder="全部状态" @change="appraiseSelect">
           <el-option
               v-for="item in appraiseStatus"
               :key="item.value"
@@ -43,17 +43,34 @@
           />
         </el-select>
       </el-col>
-      <el-col :span="12" class="marginTop">
-        下单时间：
+      <el-col :span="6" class="marginTop">
+        开始时间：
+        <!--        <el-date-picker-->
+        <!--            v-model="selectedTime"-->
+        <!--            type="daterange"-->
+        <!--            start-placeholder="开始时间"-->
+        <!--            end-placeholder="结束时间"-->
+        <!--            :default-value="[new Date(2010, 9, 1), new Date(2010, 10, 1)]"-->
+        <!--        />-->
         <el-date-picker
-            v-model="selectedTime"
-            type="daterange"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            :default-value="[new Date(2010, 9, 1), new Date(2010, 10, 1)]"
+            v-model="searchInfo.begin"
+            type="date"
+            placeholder="查询开始时间"
+            format="YYYY/MM/DD"
+            value-format="YYYY-MM-DD"
         />
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" class="marginTop">
+        结束时间：
+        <el-date-picker
+            v-model="searchInfo.end"
+            type="date"
+            placeholder="查询结束时间"
+            format="YYYY/MM/DD"
+            value-format="YYYY-MM-DD"
+        />
+      </el-col>
+      <el-col :span="12">
         <el-button type="primary" @click="search" size="large" class="marginTop">搜索</el-button>
       </el-col>
     </el-row>
@@ -72,8 +89,6 @@
     <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :small="small"
-        :disabled="disabled"
         :background="background"
         layout="prev, pager, next, jumper"
         :total="1000"
@@ -112,21 +127,64 @@ export default {
   },
   data() {
     return {
-      orderID: ref(''),
-      goodsName: ref(''),
-      selectedTime: ref(''), // 搜索的下单时间段
-      statusSelect: ref(''),
+      // 搜索信息
+      searchInfo: {
+        pageNum: ref(1),
+        pageSize: ref(10),
+        storeID: ref('2'),
+        // 评价转态
+        appraise: ref(''),
+        // 开始结束时间
+        begin: ref(''),
+        end: ref(''),
+        name: ref(''),
+        orderId: ref(''),
+        status: ref('')
+      },
+      // 订单状态
       orderStatus: [
         {
-          value: 'nonPayment',
-          label: '未付款'
+          value: '0',
+          label: '待付款'
         },
         {
-          value: 'Paid',
-          label: '已付款'
+          value: '1',
+          label: '交易关闭'
+        },
+        {
+          value: '2',
+          label: '待发货'
+        },
+        {
+          value: '3',
+          label: '配送中'
+        },
+        {
+          value: '4',
+          label: '待收货'
+        },
+        // {
+        //   value: '5',
+        //   label: '待评价'
+        // },
+        {
+          value: '6',
+          label: '交易成功'
+        },
+        {
+          value: '7',
+          label: '已退款'
+        },
+        {
+          value: '8',
+          label: '申请退款中'
+        },
+        {
+          value: '9',
+          label: '申请退款失败'
         }
       ],
-      appraiseSelect: ref(''),
+      // 评价状态
       appraiseStatus: [
         {
           value: 'nonAppraise',
@@ -137,9 +195,10 @@ export default {
           label: '已评价'
         }
       ],
+      // 当前页码
       currentPage: ref(5),
+      // 总页码
       pageSize: ref(100),
-      small: ref(false),
       background: ref(false),
       dialogVisible: ref(false)
 
@@ -148,14 +207,25 @@ export default {
   },
   methods: {
     search() {
-
+      this.$api.order.OrderSearch(
+        this.searchInfo
+      )
     },
 
     handleSizeChange(val) {
-      console.log(`${val} items per page`)
     },
+    // 页面变换触发函数
     handleCurrentChange(val) {
       console.log(`current page: ${val}`)
+    },
+    handleClose(){
+      console.log(1)
+    },
+    statusSelect(){
+      console.log('statusSelect')
+    },
+    appraiseSelect(){
+      console.log('appraiseSelect')
     }
   }
 }

@@ -19,10 +19,13 @@ export default {
 <style scoped lang="scss">
 header {
   height: 5vh;
-  background-color: var(--el-color-primary-blue-3);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #ed5126;
+  //background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png");
+  background-image: url("https://www.transparenttextures.com/patterns/brick-wall-dark.png");
+
 
   span {
     margin: 0 1rem;

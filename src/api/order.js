@@ -19,6 +19,34 @@ export function GetChartStatistics(data) {
     }
   })
 }
+export function GetOrderList(data) {
+  return request({
+    method:'GET',
+    url:'/order/list',
+    params:{
+      ...data
+    }
+  })
+}
+export function getOrderStatistics(data) {
+  return request({
+    method:'GET',
+    url: '/order/order-statistics',
+    params:{
+      ...data
+    }
+  })
+}
+// 待处理订单接口
+export function OrderSearch(data) {
+  return request({
+    method:'GET',
+    url:'/order/order-search',
+    params:{
+      ...data
+    }
+  })
+}
 
 
 export function getCode(data) {
